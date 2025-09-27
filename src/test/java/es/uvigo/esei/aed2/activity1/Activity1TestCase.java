@@ -13,10 +13,10 @@ package es.uvigo.esei.aed2.activity1;
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -27,6 +27,7 @@ package es.uvigo.esei.aed2.activity1;
  * #L%
  */
 
+import java.io.Console;
 import java.util.Arrays;
 import java.util.Stack;
 import org.junit.jupiter.api.Test;
@@ -111,6 +112,18 @@ public class Activity1TestCase {
     String str = "example";
     String expResult = "elpmaxe";
     String result = Activity1.invert(str);
+
+    assertEquals(expResult, result);
+  }
+
+  /**
+   * Test of invert method, of class Activity1.
+   */
+  @Test
+  public void testInvert2() {
+    String str = "example";
+    String expResult = "elpmaxe";
+    String result = Activity1.invert2(str);
 
     assertEquals(expResult, result);
   }

@@ -13,10 +13,10 @@ package es.uvigo.esei.aed2.activity1;
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -38,8 +38,15 @@ public class Activity1 {
    * @return el factorial de number.
    */
   public static long factorial(int number) {
-    // TODO: Implementa el cálculo del factorial de number de forma recursiva
-    return 0;
+    if (number < 0) {
+      throw new IllegalArgumentException("El número debe ser positivo");
+    }
+
+    if (number == 0) {
+      return 1;
+    } else {
+      return number * factorial(number - 1);
+    }
   }
 
   /**
@@ -49,8 +56,15 @@ public class Activity1 {
    * @return el cuadrado de number.
    */
   public static int square(int number) {
-    // TODO: Implementa el cálculo recursivo del cuadrado de number
-    return 0;
+    if (number < 0) {
+      throw new IllegalArgumentException("El número debe ser positivo");
+    }
+
+    if (number == 0) {
+      return number;
+    } else {
+      return square(number - 1) + ((2 * number) - 1);
+    }
   }
 
   /**
@@ -60,8 +74,18 @@ public class Activity1 {
    * @return la suma de los dígitos de number.
    */
   public static int sumDigits(int number) {
-    // TODO: Implementa la suma recursiva de los dígitos de number
-    return 0;
+    if (number < 0) {
+      throw new IllegalArgumentException("El número debe ser positivo");
+    }
+
+    int digit = number % 10;
+    int rest = number / 10;
+
+    if (rest == 0) {
+      return digit;
+    } else {
+      return digit + sumDigits(rest);
+    }
   }
 
   /**
@@ -72,8 +96,18 @@ public class Activity1 {
    * @return el MCD de number1 y number2
    */
   public static int mcd(int number1, int number2) {
-    // TODO: Implementa el cálculo recursivo del MCD de number1 y number2
-    return 0;
+
+    if (number1 < 0 || number2 < 0) {
+      throw new IllegalArgumentException("Los números deben ser positivos");
+    }
+
+    if (number1 > number2) {
+      return mcd(number1 - number2, number2);
+    } else if (number1 < number2) {
+      return mcd(number1, number2 - number1);
+    } else {
+      return number1;
+    }
   }
 
   /**
@@ -83,8 +117,34 @@ public class Activity1 {
    * @return el string invertido.
    */
   public static String invert(String str) {
-    // TODO: Implementa la inversión recursiva de un String
-    return null;
+    if (str == null || str.length() <= 1) {
+      return str;
+    } else {
+      return invert(str.substring(1)) + str.charAt(0);
+    }
+  }
+
+  /**
+   * exercise 5
+   *
+   * @param str String usado para invertir caracteres.
+   * @return el string invertido.
+   */
+  public static String invert2(String str) {
+    if (str == null) {
+      throw new IllegalArgumentException("El string no puede ser nulo");
+    }
+
+    return invertHelper(str, 0);
+
+  }
+
+  private static String invertHelper(String str, int pos) {
+    if (pos == str.length() - 1) {
+      return String.valueOf(str.charAt(pos));
+    } else {
+      return str.charAt(str.length() - 1 - pos) + invertHelper(str, pos + 1);
+    }
   }
 
   /**
@@ -94,8 +154,27 @@ public class Activity1 {
    * @return suma todos los valores del array.
    */
   public static int addValues(int[] values) {
-    // TODO: Implementa la suma recursiva de los valores de un array
-    return 0;
+    if( values == null) {
+      throw new IllegalArgumentException("El array no puede ser nulo");
+    }
+
+    if (values.length == 0) {
+      return 0;
+    }
+
+    if( values.length == 1) {
+      return values[0];
+    }
+
+    return addValuesHelper(values, 0);
+  }
+
+  private static int addValuesHelper(int[] values, int index) {
+    if (index == values.length - 1) {
+      return values[index];
+    } else {
+      return values[index] + addValuesHelper(values, index + 1);
+    }
   }
 
   /**
@@ -104,7 +183,24 @@ public class Activity1 {
    * @param values array usado para el proceso de inversion.
    */
   public static void invertArray(int[] values) {
-    // TODO: Implementa la inversión recursiva de un array
+    if( values == null) {
+      throw new IllegalArgumentException("El array no puede ser nulo");
+    }
+
+    if (values.length <= 1) {
+      return;
+    }
+
+    invertArrayHelper(values, 0, values.length - 1);
+  }
+
+  private static void invertArrayHelper(int[] values, int start, int end) {
+    if (start < end) {
+      int temp = values[start];
+      values[start] = values[end];
+      values[end] = temp;
+      invertArrayHelper(values, start + 1, end - 1);
+    }
   }
 
   /**
@@ -133,7 +229,7 @@ public class Activity1 {
   /**
    * exercise 10
    *
-   * @param <T> Tipo de los elementos contenidos en el Stack.
+   * @param <T>   Tipo de los elementos contenidos en el Stack.
    * @param stack la pila a copiar.
    * @return una nueva pila con los mismos elementos que la original.
    */
