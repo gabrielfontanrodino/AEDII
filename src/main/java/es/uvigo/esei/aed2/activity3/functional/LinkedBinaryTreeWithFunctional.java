@@ -32,7 +32,6 @@ public class LinkedBinaryTreeWithFunctional<T> extends LinkedBinaryTree<T> imple
 
     private static <T> void forEach(BinaryTree<T> tree, Consumer<T> action, Predicate<T> filter) {
         if (!tree.isEmpty()) {
-            System.out.println(tree.getRootValue());
             if (filter.test(tree.getRootValue())) {
                 action.accept(tree.getRootValue());
             }

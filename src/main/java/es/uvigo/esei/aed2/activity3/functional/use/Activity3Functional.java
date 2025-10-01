@@ -1,77 +1,54 @@
 package es.uvigo.esei.aed2.activity3.functional.use;
 
-import java.util.List;
-
-/*-
- * #%L
- * AEDII - Activities
- * %%
- * Copyright (C) 2025 Rosalía Laza Fidalgo, María Reyes Pavón Rial,
- * Florentino Fernández Riverola, María Novo Lourés, and Miguel Reboiro Jato
- * %%
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- * 
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- * #L%
- */
 import es.uvigo.esei.aed2.activity3.functional.BinaryTreeWithFunctional;
 import es.uvigo.esei.aed2.tree.binary.BinaryTree;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
 public class Activity3Functional {
 
-  /**
-   * muestra todos los valores almacenados en el arbol
-   *
-   * @param <T> el tipo de los valores del árbol
-   * @param tree arbol binario con métodos funcionales
-   */
-  public static <T> void printAllValues(BinaryTreeWithFunctional<T> tree) {
-    // TODO: Implementa el método para mostrar todos los valores del árbol usando forEach
-  }
+    /**
+     * muestra todos los valores almacenados en el arbol
+     *
+     * @param <T>  el tipo de los valores del árbol
+     * @param tree arbol binario con métodos funcionales
+     */
+    public static <T> void printAllValues(BinaryTreeWithFunctional<T> tree) {
+        tree.forEach(System.out::println);
+    }
 
-  /**
-   * recorre el árbol y guarda los valores pares en una lista
-   *
-   * @param tree árbol binario de enteros con métodos funcionales
-   * @return una lista con los valores pares del árbol de enteros
-   */
-  public static List<Integer> listEvenValues(BinaryTreeWithFunctional<Integer> tree) {
-    // TODO: Implementa el método para devolver una lista con los valores pares usando forEach y un predicado
-    return null;
-  }
+    /**
+     * recorre el árbol y guarda los valores pares en una lista
+     *
+     * @param tree árbol binario de enteros con métodos funcionales
+     * @return una lista con los valores pares del árbol de enteros
+     */
+    public static List<Integer> listEvenValues(BinaryTreeWithFunctional<Integer> tree) {
+        List<Integer> list = new ArrayList<>();
+        tree.forEach(value -> {
+            if(value % 2 == 0) list.add(value);
+        });
+        return list;
+    }
 
-  /**
-   * muestra todos los valores mayores de 30
-   *
-   * @param tree árbol binario de enteros con métodos funcionales
-   */
-  public static void printValuesGreaterThan30(BinaryTreeWithFunctional<Integer> tree) {
-    // TODO: Implementa el método para mostrar valores mayores de 30 usando forEach y un predicado
-  }
+    /**
+     * muestra todos los valores mayores de 30
+     *
+     * @param tree árbol binario de enteros con métodos funcionales
+     */
+    public static void printValuesGreaterThan30(BinaryTreeWithFunctional<Integer> tree) {
+        tree.forEach(System.out::println, value -> (value > 30));
+    }
 
-  /**
-   * crea un nuevo arbol binario con los valores de los nodos triplicados
-   *
-   * @param tree arbol binario de enteros
-   * @return un arbol binario con los valores triplicados.
-   */
-  public static BinaryTree<Integer> binaryTreeWithTripleValues(BinaryTreeWithFunctional<Integer> tree) {
-    // TODO: Implementa el método para devolver un árbol con los valores triplicados usando map
-    return null;
-  }
-
+    /**
+     * crea un nuevo arbol binario con los valores de los nodos triplicados
+     *
+     * @param tree arbol binario de enteros
+     * @return un arbol binario con los valores triplicados.
+     */
+    public static BinaryTree<Integer> binaryTreeWithTripleValues(BinaryTreeWithFunctional<Integer> tree) {
+        return tree.map(value -> value*3);
+    }
 }
