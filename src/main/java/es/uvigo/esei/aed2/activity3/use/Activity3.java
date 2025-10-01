@@ -13,10 +13,10 @@ package es.uvigo.esei.aed2.activity3.use;
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -30,9 +30,53 @@ package es.uvigo.esei.aed2.activity3.use;
 import es.uvigo.esei.aed2.tree.binary.BinaryTree;
 
 public class Activity3 {
-  // exercise
-  public static <T> T getParent(BinaryTree<T> tree, T value) {
-    // TODO: Implementa el método para obtener el padre de un nodo dado en el árbol binario
-    return null;
-  }
+    // exercise 2
+    public static <T> T getParent(BinaryTree<T> tree, T value) {
+        if (tree.isEmpty() || tree.getRootValue().equals(value)) {
+            return null;
+        }
+        return getParent(tree, value, null);
+    }
+
+    /**
+     * Función auxiliar privada que busca el nodo padre de un nodo específico en un árbol binario.
+     *
+     * @param <T>    El tipo de los valores almacenados en el árbol.
+     * @param tree   El árbol binario sobre el que buscar.
+     * @param value  El valor del nodo cuyo padre se desea encontrar.
+     * @param parent El valor del nodo padre al actual nodo durante la búsqueda.
+     * @return El valor del nodo padre del nodo, o `null` si el nodo no
+     *         tiene padre o no se encuentra en el árbol.
+     */
+    private static <T> T getParent(BinaryTree<T> tree, T value, T parent) {
+        if (tree.isEmpty()) {
+            return null;
+        }
+        if (tree.getRootValue().equals(value)) {
+            return parent;
+        }
+
+        // Buscar en el subárbol izquierdo
+        T leftResult = getParent(tree.getLeftChild(), value, tree.getRootValue());
+        // En caso de encontrar el valor en el subárbol izquierdo, devolver el resultado
+        if (leftResult != null) {
+            return leftResult;
+        }
+
+        // Buscar en el subárbol derecho
+        return getParent(tree.getRightChild(), value, tree.getRootValue());
+    }
+
+    public static <T> T getParentRecursive(BinaryTree<T> tree, T value) {
+        if(tree.isEmpty() || tree.getRootValue().equals(value)) return null;
+
+        if(tree.hasLeftChild() && tree.getLeftChild().equals(value) || tree.hasRightChild() && tree.getRightChild().equals(value)) {
+            return tree.getRootValue();
+        }
+
+        T leftParent = getParentRecursive(tree.getLeftChild(), value);
+        if(leftParent == null) return getParentRecursive(tree.getRightChild(), value);
+
+        return leftParent;
+    }
 }

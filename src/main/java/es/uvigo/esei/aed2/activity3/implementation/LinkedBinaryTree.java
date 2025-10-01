@@ -18,7 +18,11 @@ public class LinkedBinaryTree<T> implements BinaryTree<T> {
     }
 
     public LinkedBinaryTree(T value, BinaryTree<T> leftChild, BinaryTree<T> rightChild) throws NullPointerException {
-        this.rootNode = new LinkedBinaryTreeNode<>(requireNonNull(value, "Null values cannot be saved in a binary tree."), buildNodeFromTree(leftChild), buildNodeFromTree(rightChild));
+        this.rootNode = new LinkedBinaryTreeNode<>(
+            requireNonNull(value, "Null values cannot be saved in a binary tree."),
+            buildNodeFromTree(leftChild),
+            buildNodeFromTree(rightChild)
+        );
     }
 
     private LinkedBinaryTree(LinkedBinaryTreeNode<T> root) {
@@ -28,7 +32,11 @@ public class LinkedBinaryTree<T> implements BinaryTree<T> {
     private LinkedBinaryTreeNode<T> buildNodeFromTree(BinaryTree<T> tree) {
         if (tree.isEmpty()) return null;
 
-        return new LinkedBinaryTreeNode<>(tree.getRootValue(), tree.hasLeftChild() ? buildNodeFromTree(tree.getLeftChild()) : null, tree.hasLeftChild() ? buildNodeFromTree(tree.getRightChild()) : null);
+        return new LinkedBinaryTreeNode<>(
+            tree.getRootValue(),
+            tree.hasLeftChild() ? buildNodeFromTree(tree.getLeftChild()) : null,
+            tree.hasLeftChild() ? buildNodeFromTree(tree.getRightChild()) : null
+        );
     }
 
     // Métodos lanzan excepción
