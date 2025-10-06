@@ -13,10 +13,10 @@ package es.uvigo.esei.aed2.activity6.relatedwords;
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -27,19 +27,19 @@ package es.uvigo.esei.aed2.activity6.relatedwords;
  * #L%
  */
 
-import java.util.List;
-
 import es.uvigo.esei.aed2.graph.Graph;
 
+import java.util.List;
+
 public class RelatedWords {
-  /**
-   * Construye un grafo que representa las relaciones entre las palabras.
-   *  
-   * @param words palabras a relacionar.
-   * @return grafo de palabras relacionadas.
-   */
-  public static Graph<String, Integer> buildGraph(List<String> words) {
-    // TODO: Implementa la construcción del grafo de palabras relacionadas
-    return null;
-  }
+    /**
+     * Construye un grafo que representa las relaciones entre las palabras.
+     *
+     * @param words palabras a relacionar.
+     * @return grafo de palabras relacionadas.
+     */
+    public static Graph<String, Integer> buildGraph(List<String> words) {
+        // TODO: Implementa la construcción del grafo de palabras relacionadas
+        return null;
+    }
 }

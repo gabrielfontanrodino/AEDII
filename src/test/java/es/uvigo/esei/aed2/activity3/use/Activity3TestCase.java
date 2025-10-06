@@ -13,10 +13,10 @@ package es.uvigo.esei.aed2.activity3.use;
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -28,42 +28,40 @@ package es.uvigo.esei.aed2.activity3.use;
  */
 
 import es.uvigo.esei.aed2.activity2.data.BinaryTreeRepository;
-
 import es.uvigo.esei.aed2.activity3.implementation.LinkedBinaryTree;
 import es.uvigo.esei.aed2.tree.binary.BinaryTree;
+import org.junit.jupiter.api.Test;
 
 import static es.uvigo.esei.aed2.activity3.use.Activity3.getParent;
-
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
-import org.junit.jupiter.api.Test;
 
 public class Activity3TestCase {
 
-  private final BinaryTreeRepository<BinaryTree<String>> trees = new BinaryTreeRepository<>(
-    LinkedBinaryTree::new, LinkedBinaryTree::new
-  );
+    private final BinaryTreeRepository<BinaryTree<String>> trees = new BinaryTreeRepository<>(
+        LinkedBinaryTree::new, LinkedBinaryTree::new
+    );
 
-  @Test
-  public void exerciseGetParentEmptyTree() {
-    final BinaryTree<String> treeEmpty = trees.getTreeA();
+    @Test
+    public void exerciseGetParentEmptyTree() {
+        final BinaryTree<String> treeEmpty = trees.getTreeA();
 
-    assertThat(getParent(treeEmpty, "x"), is(nullValue()));
-  }
+        assertThat(getParent(treeEmpty, "x"), is(nullValue()));
+    }
 
-  @Test
-  public void exerciseGetParentTreeA() {
-    final BinaryTree<String> treeEmpty = trees.getTreeA();
+    @Test
+    public void exerciseGetParentTreeA() {
+        final BinaryTree<String> treeEmpty = trees.getTreeA();
 
-    assertThat(getParent(treeEmpty, "A"), is(nullValue()));
-  }
+        assertThat(getParent(treeEmpty, "A"), is(nullValue()));
+    }
 
-  @Test
-  public void exerciseGetParentTreeB() {
-    final BinaryTree<String> treeEmpty = trees.getTreeB();
+    @Test
+    public void exerciseGetParentTreeB() {
+        final BinaryTree<String> treeEmpty = trees.getTreeB();
 
-    assertThat(getParent(treeEmpty, "D"), is("C"));
-  }
+        assertThat(getParent(treeEmpty, "D"), is("C"));
+    }
 
 }

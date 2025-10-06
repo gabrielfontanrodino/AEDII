@@ -13,10 +13,10 @@ package es.uvigo.esei.aed2.activity6.relatedwords;
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -27,43 +27,40 @@ package es.uvigo.esei.aed2.activity6.relatedwords;
  * #L%
  */
 
-import static es.uvigo.esei.aed2.activity6.relatedwords.IsEqualToGraph.equalToGraph;
-import static es.uvigo.esei.aed2.activity6.relatedwords.RelatedWords.buildGraph;
-import es.uvigo.esei.aed2.activity7.data.GraphRepository;
 import es.uvigo.esei.aed2.activity6.mapofmap.MapOfMap;
+import es.uvigo.esei.aed2.activity7.data.GraphRepository;
 import es.uvigo.esei.aed2.graph.Graph;
-
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-
+import static es.uvigo.esei.aed2.activity6.relatedwords.IsEqualToGraph.equalToGraph;
+import static es.uvigo.esei.aed2.activity6.relatedwords.RelatedWords.buildGraph;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
-
 import static org.hamcrest.MatcherAssert.assertThat;
-import org.junit.jupiter.api.Test;
 
 public class RelatedWordsTestCase {
 
-  private final GraphRepository graphs = new GraphRepository(
-          MapOfMap::new, MapOfMap::new);
+    private final GraphRepository graphs = new GraphRepository(
+        MapOfMap::new, MapOfMap::new);
 
-  @Test
-  public void testBuildGraph() {
-    Graph<String, Integer> expResult = graphs.getGraphRelatedWords();
-    List<String> words = List.of("fool", "foul", "foil", "pool", "cool");
-    Graph<String, Integer> result = buildGraph(words);
+    @Test
+    public void testBuildGraph() {
+        Graph<String, Integer> expResult = graphs.getGraphRelatedWords();
+        List<String> words = List.of("fool", "foul", "foil", "pool", "cool");
+        Graph<String, Integer> result = buildGraph(words);
 
-    assertThat(result, is(equalToGraph(expResult)));
-  }
+        assertThat(result, is(equalToGraph(expResult)));
+    }
 
-  @Test
-  public void testBuildGraphFalse() {
-    Graph<String, Integer> expResult = graphs.getGraphRelatedWords();
-    List<String> words = List.of("fool", "foul", "coil", "pool", "cool");
-    Graph<String, Integer> result = buildGraph(words);
+    @Test
+    public void testBuildGraphFalse() {
+        Graph<String, Integer> expResult = graphs.getGraphRelatedWords();
+        List<String> words = List.of("fool", "foul", "coil", "pool", "cool");
+        Graph<String, Integer> result = buildGraph(words);
 
-    assertThat(result, is(not(equalToGraph(expResult))));
-  }
+        assertThat(result, is(not(equalToGraph(expResult))));
+    }
 
 }

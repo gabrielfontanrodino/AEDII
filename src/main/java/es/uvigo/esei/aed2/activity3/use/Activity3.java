@@ -46,7 +46,7 @@ public class Activity3 {
      * @param value  El valor del nodo cuyo padre se desea encontrar.
      * @param parent El valor del nodo padre al actual nodo durante la búsqueda.
      * @return El valor del nodo padre del nodo, o `null` si el nodo no
-     *         tiene padre o no se encuentra en el árbol.
+     * tiene padre o no se encuentra en el árbol.
      */
     private static <T> T getParent(BinaryTree<T> tree, T value, T parent) {
         if (tree.isEmpty()) {
@@ -68,14 +68,14 @@ public class Activity3 {
     }
 
     public static <T> T getParentRecursive(BinaryTree<T> tree, T value) {
-        if(tree.isEmpty() || tree.getRootValue().equals(value)) return null;
+        if (tree.isEmpty() || tree.getRootValue().equals(value)) return null;
 
-        if(tree.hasLeftChild() && tree.getLeftChild().equals(value) || tree.hasRightChild() && tree.getRightChild().equals(value)) {
+        if (tree.hasLeftChild() && tree.getLeftChild().equals(value) || tree.hasRightChild() && tree.getRightChild().equals(value)) {
             return tree.getRootValue();
         }
 
         T leftParent = getParentRecursive(tree.getLeftChild(), value);
-        if(leftParent == null) return getParentRecursive(tree.getRightChild(), value);
+        if (leftParent == null) return getParentRecursive(tree.getRightChild(), value);
 
         return leftParent;
     }

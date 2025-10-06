@@ -27,178 +27,180 @@ package es.uvigo.esei.aed2.activity1;
  * #L%
  */
 
-import java.io.Console;
+import org.junit.jupiter.api.Test;
+
 import java.util.Arrays;
 import java.util.Stack;
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class Activity1TestCase {
 
-  public Activity1TestCase() {
-  }
+    public Activity1TestCase() {
+    }
 
-  /**
-   * Test of factorial method, of class Activity1.
-   */
-  @Test
-  public void testFactorialZero() {
-    int number = 0;
-    long expResult = 1;
-    long result = Activity1.factorial(number);
-    assertEquals(expResult, result);
-  }
+    /**
+     * Test of factorial method, of class Activity1.
+     */
+    @Test
+    public void testFactorialZero() {
+        int number = 0;
+        long expResult = 1;
+        long result = Activity1.factorial(number);
+        assertEquals(expResult, result);
+    }
 
-  @Test
-  public void testFactorial() {
-    int number = 4;
-    long expResult = 24;
-    long result = Activity1.factorial(number);
+    @Test
+    public void testFactorial() {
+        int number = 4;
+        long expResult = 24;
+        long result = Activity1.factorial(number);
 
-    assertEquals(expResult, result);
-  }
+        assertEquals(expResult, result);
+    }
 
-  /**
-   * Test of square method, of class Activity1.
-   */
-  @Test
-  public void testSquareZero() {
-    int number = 0;
-    int expResult = 0;
-    int result = Activity1.square(number);
+    /**
+     * Test of square method, of class Activity1.
+     */
+    @Test
+    public void testSquareZero() {
+        int number = 0;
+        int expResult = 0;
+        int result = Activity1.square(number);
 
-    assertEquals(expResult, result);
-  }
+        assertEquals(expResult, result);
+    }
 
-  @Test
-  public void testSquare() {
-    int number = 5;
-    int expResult = 25;
-    int result = Activity1.square(number);
+    @Test
+    public void testSquare() {
+        int number = 5;
+        int expResult = 25;
+        int result = Activity1.square(number);
 
-    assertEquals(expResult, result);
-  }
+        assertEquals(expResult, result);
+    }
 
-  /**
-   * Test of sumDigits method, of class Activity1.
-   */
-  @Test
-  public void testSumDigits() {
-    int number = 1111;
-    int expResult = 4;
-    int result = Activity1.sumDigits(number);
+    /**
+     * Test of sumDigits method, of class Activity1.
+     */
+    @Test
+    public void testSumDigits() {
+        int number = 1111;
+        int expResult = 4;
+        int result = Activity1.sumDigits(number);
 
-    assertEquals(expResult, result);
-  }
+        assertEquals(expResult, result);
+    }
 
-  /**
-   * Test of mcd method, of class Activity1.
-   */
-  @Test
-  public void testMcd() {
-    int number1 = 22;
-    int number2 = 12;
-    int expResult = 2;
-    int result = Activity1.mcd(number1, number2);
+    /**
+     * Test of mcd method, of class Activity1.
+     */
+    @Test
+    public void testMcd() {
+        int number1 = 22;
+        int number2 = 12;
+        int expResult = 2;
+        int result = Activity1.mcd(number1, number2);
 
-    assertEquals(expResult, result);
-  }
+        assertEquals(expResult, result);
+    }
 
-  /**
-   * Test of invert method, of class Activity1.
-   */
-  @Test
-  public void testInvert() {
-    String str = "example";
-    String expResult = "elpmaxe";
-    String result = Activity1.invert(str);
+    /**
+     * Test of invert method, of class Activity1.
+     */
+    @Test
+    public void testInvert() {
+        String str = "example";
+        String expResult = "elpmaxe";
+        String result = Activity1.invert(str);
 
-    assertEquals(expResult, result);
-  }
+        assertEquals(expResult, result);
+    }
 
-  /**
-   * Test of invert method, of class Activity1.
-   */
-  @Test
-  public void testInvert2() {
-    String str = "example";
-    String expResult = "elpmaxe";
-    String result = Activity1.invert2(str);
+    /**
+     * Test of invert method, of class Activity1.
+     */
+    @Test
+    public void testInvert2() {
+        String str = "example";
+        String expResult = "elpmaxe";
+        String result = Activity1.invert2(str);
 
-    assertEquals(expResult, result);
-  }
+        assertEquals(expResult, result);
+    }
 
-  /**
-   * Test of addValues method, of class Activity1.
-   */
-  @Test
-  public void testAddValues() {
-    int[] values = {
-      2, 4, 6, 8
-    };
-    int expResult = 20;
-    int result = Activity1.addValues(values);
+    /**
+     * Test of addValues method, of class Activity1.
+     */
+    @Test
+    public void testAddValues() {
+        int[] values = {
+            2, 4, 6, 8
+        };
+        int expResult = 20;
+        int result = Activity1.addValues(values);
 
-    assertEquals(expResult, result);
-  }
+        assertEquals(expResult, result);
+    }
 
-  /**
-   * Test of invertArray method, of class Activity1.
-   */
-  @Test
-  public void testInvertArray() {
-    int[] values = {
-      2, 4, 6, 8
-    };
-    int[] expResult = {
-      8, 6, 4, 2
-    };
-    Activity1.invertArray(values);
+    /**
+     * Test of invertArray method, of class Activity1.
+     */
+    @Test
+    public void testInvertArray() {
+        int[] values = {
+            2, 4, 6, 8
+        };
+        int[] expResult = {
+            8, 6, 4, 2
+        };
+        Activity1.invertArray(values);
 
-    assertArrayEquals(expResult, values);
-  }
+        assertArrayEquals(expResult, values);
+    }
 
-  /**
-   * Test of minimum method, of class Activity1.
-   */
-  @Test
-  public void testMinimum() {
-    int[] values = {
-      4, 3, 6, 2, 8
-    };
-    int expResult = 2;
-    int result = Activity1.minimum(values);
+    /**
+     * Test of minimum method, of class Activity1.
+     */
+    @Test
+    public void testMinimum() {
+        int[] values = {
+            4, 3, 6, 2, 8
+        };
+        int expResult = 2;
+        int result = Activity1.minimum(values);
 
-    assertEquals(expResult, result);
-  }
+        assertEquals(expResult, result);
+    }
 
-  /**
-   * Test of binarySearch method, of class Activity1.
-   */
-  @Test
-  public void testBinarySearch() {
-    double[] values = {
-      1.1, 2.2, 3.3, 4.4, 5.5
-    };
-    double number = 3.3;
-    int expResult = 2;
-    int result = Activity1.binarySearch(values, number);
+    /**
+     * Test of binarySearch method, of class Activity1.
+     */
+    @Test
+    public void testBinarySearch() {
+        double[] values = {
+            1.1, 2.2, 3.3, 4.4, 5.5
+        };
+        double number = 3.3;
+        int expResult = 2;
+        int result = Activity1.binarySearch(values, number);
 
-    assertEquals(expResult, result);
-  }
+        assertEquals(expResult, result);
+    }
 
-  /**
-   * Test of copyStack method, of class Activity1.
-   */
-  @Test
-  public void testCopyStack() {
-    Stack<String> expResult = new Stack<>();
-    expResult.addAll(Arrays.asList(new String[] {
-      "AEDII", "Actividad", "Uno"
-    }));
-    Stack<String> result = Activity1.copyStack(expResult);
+    /**
+     * Test of copyStack method, of class Activity1.
+     */
+    @Test
+    public void testCopyStack() {
+        Stack<String> expResult = new Stack<>();
+        expResult.addAll(Arrays.asList(new String[]{
+            "AEDII", "Actividad", "Uno"
+        }));
+        Stack<String> result = Activity1.copyStack(expResult);
 
-    assertEquals(expResult, result);
-  }
+        assertEquals(expResult, result);
+    }
 
 }

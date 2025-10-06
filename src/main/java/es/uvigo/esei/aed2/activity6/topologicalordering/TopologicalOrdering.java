@@ -13,10 +13,10 @@ package es.uvigo.esei.aed2.activity6.topologicalordering;
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -27,20 +27,20 @@ package es.uvigo.esei.aed2.activity6.topologicalordering;
  * #L%
  */
 
-import java.util.List;
-
 import es.uvigo.esei.aed2.graph.Graph;
 import es.uvigo.esei.aed2.graph.Vertex;
 
+import java.util.List;
+
 public class TopologicalOrdering {
-  /**
-   * Calcula el orden topológico de un grafo dirigido acíclico (DAG).
-   * 
-   * @param graph grafo dirigido acíclico.
-   * @return lista de vértices en orden topológico.
-   */
-  public static <T, E> List<Vertex<T>> getTopologicalOrder(Graph<T, E> graph) {
-    // TODO: Implementa el cálculo del orden topológico de un grafo
-    return null;
-  }
+    /**
+     * Calcula el orden topológico de un grafo dirigido acíclico (DAG).
+     *
+     * @param graph grafo dirigido acíclico.
+     * @return lista de vértices en orden topológico.
+     */
+    public static <T, E> List<Vertex<T>> getTopologicalOrder(Graph<T, E> graph) {
+        // TODO: Implementa el cálculo del orden topológico de un grafo
+        return null;
+    }
 }

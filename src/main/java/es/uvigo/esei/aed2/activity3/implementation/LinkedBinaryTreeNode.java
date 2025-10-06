@@ -29,53 +29,53 @@ package es.uvigo.esei.aed2.activity3.implementation;
 
 public class LinkedBinaryTreeNode<T> {
 
-  private T value;
-  private LinkedBinaryTreeNode<T> leftChild;
-  private LinkedBinaryTreeNode<T> rightChild;
+    private T value;
+    private LinkedBinaryTreeNode<T> leftChild;
+    private LinkedBinaryTreeNode<T> rightChild;
 
-  public LinkedBinaryTreeNode() {
-    this(null, null, null);
-  }
+    public LinkedBinaryTreeNode() {
+        this(null, null, null);
+    }
 
-  public  LinkedBinaryTreeNode(T value) {
-    this(value, null, null);
-  }
+    public LinkedBinaryTreeNode(T value) {
+        this(value, null, null);
+    }
 
-  public LinkedBinaryTreeNode(T value, LinkedBinaryTreeNode<T> leftChild, LinkedBinaryTreeNode<T> rightChild) {
-    this.leftChild = leftChild;
-    this.rightChild = rightChild;
-    this.value = value;
-  }
+    public LinkedBinaryTreeNode(T value, LinkedBinaryTreeNode<T> leftChild, LinkedBinaryTreeNode<T> rightChild) {
+        this.leftChild = leftChild;
+        this.rightChild = rightChild;
+        this.value = value;
+    }
 
-  public T getValue() {
-    return this.value;
-  }
+    public T getValue() {
+        return this.value;
+    }
 
-  public void setValue(T value) {
-    this.value = value;
-  }
+    public void setValue(T value) {
+        this.value = value;
+    }
 
-  public boolean hasLeftChild() {
-    return this.leftChild != null;
-  }
+    public boolean hasLeftChild() {
+        return this.leftChild != null;
+    }
 
-  public LinkedBinaryTreeNode<T> getLeftChild() {
-    return this.leftChild;
-  }
+    public LinkedBinaryTreeNode<T> getLeftChild() {
+        return this.leftChild;
+    }
 
-  public void setLeftChild(LinkedBinaryTreeNode<T> leftChild) {
-    this.leftChild = leftChild;
-  }
+    public void setLeftChild(LinkedBinaryTreeNode<T> leftChild) {
+        this.leftChild = leftChild;
+    }
 
-  public boolean hasRightChild() {
-    return this.rightChild != null;
-  }
+    public boolean hasRightChild() {
+        return this.rightChild != null;
+    }
 
-  public LinkedBinaryTreeNode<T> getRightChild() {
-    return this.rightChild;
-  }
+    public LinkedBinaryTreeNode<T> getRightChild() {
+        return this.rightChild;
+    }
 
-  public void setRightChild(LinkedBinaryTreeNode<T> rightChild) {
-    this.rightChild = rightChild;
-  }
+    public void setRightChild(LinkedBinaryTreeNode<T> rightChild) {
+        this.rightChild = rightChild;
+    }
 }

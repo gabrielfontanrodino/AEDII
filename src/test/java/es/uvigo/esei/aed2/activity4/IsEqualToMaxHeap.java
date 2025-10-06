@@ -13,10 +13,10 @@ package es.uvigo.esei.aed2.activity4;
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -34,50 +34,50 @@ import org.hamcrest.TypeSafeMatcher;
 
 public class IsEqualToMaxHeap<T extends Comparable<T>> extends TypeSafeMatcher<MaxHeap<T>> {
 
-  private final MaxHeap<T> expected;
+    private final MaxHeap<T> expected;
 
-  public IsEqualToMaxHeap(MaxHeap<T> expected) {
-    this.expected = expected;
-  }
-
-  @Override
-  public void describeTo(Description description) {
-    description.appendText("equal heaps");
-  }
-
-  private MaxHeap<T> clone(MaxHeap<T> heap) {
-    MaxHeap<T> copy = new BinaryMaxHeap<>();
-    Queue<T> queue = new LinkedQueue<>();
-    while (!heap.isEmpty()) {
-      queue.add(heap.removeMaxValue());
+    public IsEqualToMaxHeap(MaxHeap<T> expected) {
+        this.expected = expected;
     }
-    while (!queue.isEmpty()) {
-      T value = queue.remove();
-      copy.add(value);
-      heap.add(value);
+
+    @Override
+    public void describeTo(Description description) {
+        description.appendText("equal heaps");
     }
-    return copy;
-  }
 
-  @Override
-  protected boolean matchesSafely(MaxHeap<T> actual) {
-    MaxHeap<T> cloneHeapA = clone(this.expected);
-    MaxHeap<T> cloneHeapB = clone(actual);
-
-    return compareHeaps(cloneHeapA, cloneHeapB);
-  }
-
-  private static <T extends Comparable<T>> boolean compareHeaps(MaxHeap<T> heapA, MaxHeap<T> heapB) {
-    while (!heapA.isEmpty() && !heapB.isEmpty()) {
-      if (!heapA.removeMaxValue().equals(heapB.removeMaxValue())) {
-        return false;
-      }
+    private MaxHeap<T> clone(MaxHeap<T> heap) {
+        MaxHeap<T> copy = new BinaryMaxHeap<>();
+        Queue<T> queue = new LinkedQueue<>();
+        while (!heap.isEmpty()) {
+            queue.add(heap.removeMaxValue());
+        }
+        while (!queue.isEmpty()) {
+            T value = queue.remove();
+            copy.add(value);
+            heap.add(value);
+        }
+        return copy;
     }
-    return heapA.isEmpty() && heapB.isEmpty();
-  }
 
-  public static <T extends Comparable<T>> IsEqualToMaxHeap<T> equalToMaxHeap(MaxHeap<T> expected) {
-    return new IsEqualToMaxHeap<>(expected);
-  }
+    @Override
+    protected boolean matchesSafely(MaxHeap<T> actual) {
+        MaxHeap<T> cloneHeapA = clone(this.expected);
+        MaxHeap<T> cloneHeapB = clone(actual);
+
+        return compareHeaps(cloneHeapA, cloneHeapB);
+    }
+
+    private static <T extends Comparable<T>> boolean compareHeaps(MaxHeap<T> heapA, MaxHeap<T> heapB) {
+        while (!heapA.isEmpty() && !heapB.isEmpty()) {
+            if (!heapA.removeMaxValue().equals(heapB.removeMaxValue())) {
+                return false;
+            }
+        }
+        return heapA.isEmpty() && heapB.isEmpty();
+    }
+
+    public static <T extends Comparable<T>> IsEqualToMaxHeap<T> equalToMaxHeap(MaxHeap<T> expected) {
+        return new IsEqualToMaxHeap<>(expected);
+    }
 
 }

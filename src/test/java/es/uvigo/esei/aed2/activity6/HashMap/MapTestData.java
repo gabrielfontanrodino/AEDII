@@ -13,10 +13,10 @@ package es.uvigo.esei.aed2.activity6.HashMap;
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -34,55 +34,55 @@ import java.util.function.Supplier;
 
 public class MapTestData {
 
-  private final static int NO_KEY = 100;
-  private final static int KEY = 3;
-  private final static String VALUE = "TRES";
+    private final static int NO_KEY = 100;
+    private final static int KEY = 3;
+    private final static String VALUE = "TRES";
 
-  private final static List<Integer> KEYS = List.of(1, 2, KEY, 4, 5, 6);
-  private final static List<String> VALUES = List.of("UNO", "DOS", VALUE, "CUATRO", "CINCO", "SEIS");
+    private final static List<Integer> KEYS = List.of(1, 2, KEY, 4, 5, 6);
+    private final static List<String> VALUES = List.of("UNO", "DOS", VALUE, "CUATRO", "CINCO", "SEIS");
 
-  private final Supplier<Map<Integer, String>> mapSupplier;
+    private final Supplier<Map<Integer, String>> mapSupplier;
 
-  public MapTestData(Supplier<Map<Integer, String>> mapSupplier) {
-    this.mapSupplier = mapSupplier;
-  }
-
-  private Map<Integer, String> createMapWith(List<Integer> keys, List<String> values) {
-    final Map<Integer, String> map = this.getEmptyMap();
-
-    for (int i = 0; i < keys.size(); i++) {
-      map.add(keys.get(i), values.get(i));
+    public MapTestData(Supplier<Map<Integer, String>> mapSupplier) {
+        this.mapSupplier = mapSupplier;
     }
 
-    return map;
-  }
+    private Map<Integer, String> createMapWith(List<Integer> keys, List<String> values) {
+        final Map<Integer, String> map = this.getEmptyMap();
 
-  public Integer getKey() {
-    return KEY;
-  }
+        for (int i = 0; i < keys.size(); i++) {
+            map.add(keys.get(i), values.get(i));
+        }
 
-  public String getValue() {
-    return VALUE;
-  }
+        return map;
+    }
 
-  public Integer getNoKey() {
-    return NO_KEY;
-  }
+    public Integer getKey() {
+        return KEY;
+    }
 
-  public Map<Integer, String> getEmptyMap() {
-    return this.mapSupplier.get();
-  }
+    public String getValue() {
+        return VALUE;
+    }
 
-  public Map<Integer, String> getMap() {
-    return this.createMapWith(KEYS, VALUES);
-  }
+    public Integer getNoKey() {
+        return NO_KEY;
+    }
 
-  public List<Integer> getKeys() {
-    return KEYS;
-  }
+    public Map<Integer, String> getEmptyMap() {
+        return this.mapSupplier.get();
+    }
 
-  public List<String> getValues() {
-    return VALUES;
-  }
+    public Map<Integer, String> getMap() {
+        return this.createMapWith(KEYS, VALUES);
+    }
+
+    public List<Integer> getKeys() {
+        return KEYS;
+    }
+
+    public List<String> getValues() {
+        return VALUES;
+    }
 
 }

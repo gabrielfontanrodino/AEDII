@@ -4,7 +4,6 @@ import es.uvigo.esei.aed2.activity3.functional.BinaryTreeWithFunctional;
 import es.uvigo.esei.aed2.tree.binary.BinaryTree;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 public class Activity3Functional {
@@ -28,7 +27,7 @@ public class Activity3Functional {
     public static List<Integer> listEvenValues(BinaryTreeWithFunctional<Integer> tree) {
         List<Integer> list = new ArrayList<>();
         tree.forEach(value -> {
-            if(value % 2 == 0) list.add(value);
+            if (value % 2 == 0) list.add(value);
         });
         return list;
     }
@@ -49,6 +48,6 @@ public class Activity3Functional {
      * @return un arbol binario con los valores triplicados.
      */
     public static BinaryTree<Integer> binaryTreeWithTripleValues(BinaryTreeWithFunctional<Integer> tree) {
-        return tree.map(value -> value*3);
+        return tree.map(value -> value * 3);
     }
 }
