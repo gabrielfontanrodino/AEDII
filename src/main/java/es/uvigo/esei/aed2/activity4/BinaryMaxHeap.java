@@ -29,6 +29,8 @@ package es.uvigo.esei.aed2.activity4;
 
 import java.util.ArrayList;
 
+import static java.util.Objects.requireNonNull;
+
 public class BinaryMaxHeap<T extends Comparable<T>> implements MaxHeap<T> {
 
     // Exercise 1
@@ -58,7 +60,7 @@ public class BinaryMaxHeap<T extends Comparable<T>> implements MaxHeap<T> {
      */
     @Override
     public T getMaxValue() throws HeapEmptyException {
-        if (this.isEmpty()) throw new HeapEmptyException("The heap is empty. No max value to show.");
+        if (this.isEmpty()) throw new HeapEmptyException("The heap is empty");
 
         return array.get(1);
     }
@@ -71,7 +73,13 @@ public class BinaryMaxHeap<T extends Comparable<T>> implements MaxHeap<T> {
      */
     @Override
     public T removeMaxValue() throws HeapEmptyException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        T max = this.getMaxValue();
+        T last = array.removeLast();
+        if (!this.isEmpty()) {
+            array.set(1, last);
+            this.sink(1);
+        }
+        return max;
     }
 
     /**
@@ -81,7 +89,27 @@ public class BinaryMaxHeap<T extends Comparable<T>> implements MaxHeap<T> {
      * @param hollow la posición del elemento a mover.
      */
     private void sink(int hollow) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        int n = array.size() - 1;       // último índice válido
+        while (true) {
+            int left = hollow * 2;
+            if (left > n) break;        // Si no hay hijos, salir del bucle.
+            int right = left + 1;
+            int child = left;           // Por defecto, el hijo izquierdo es el mayor.
+
+            // Si el hijo derecho existe y es mayor que el hijo izquierdo, actualizar `child`.
+            if (right <= n && array.get(right).compareTo(array.get(left)) > 0) {
+                child = right;
+            }
+
+            // Si el elemento actual es mayor o igual que el hijo mayor, salir del bucle.
+            if (array.get(hollow).compareTo(array.get(child)) >= 0) break;
+
+            // Intercambiar el elemento actual con el hijo mayor.
+            T tmp = array.get(hollow);
+            array.set(hollow, array.get(child));
+            array.set(child, tmp);
+            hollow = child;             // Actualizar la posición del elemento y continuar.
+        }
     }
 
     /**
@@ -92,7 +120,15 @@ public class BinaryMaxHeap<T extends Comparable<T>> implements MaxHeap<T> {
      */
     @Override
     public void add(T value) throws NullPointerException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        array.add(requireNonNull(value, "Cannot add null value to the heap."));
+
+        int hueco = array.size() - 1;           // índice del nuevo elemento
+        while (hueco > 1 && array.get(hueco / 2).compareTo(value) <= 0) { // Tengo padre y el padre es menor o igual
+            int parent = hueco / 2;
+            array.set(hueco, array.get(parent));
+            array.set(parent, value);
+            hueco = parent;
+        }
     }
 
     /**
@@ -112,7 +148,7 @@ public class BinaryMaxHeap<T extends Comparable<T>> implements MaxHeap<T> {
      */
     @Override
     public void insert(T value) throws NullPointerException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        array.add(requireNonNull(value, "Cannot insert null value to the heap."));
     }
 
     /**
@@ -120,7 +156,11 @@ public class BinaryMaxHeap<T extends Comparable<T>> implements MaxHeap<T> {
      */
     @Override
     public void orderHeap() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        if (!this.isEmpty()) {
+            for (int i = ((array.size() - 1) / 2); i > 0 ; i--) {
+                sink(i);
+            }
+        }
     }
 
 }
