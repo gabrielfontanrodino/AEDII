@@ -240,4 +240,25 @@ public class Activity5 {
         }
     }
 
+    // Copia los valores del árbol hasta un nivel específico en una lista (nivel 0 = solo raíz)
+    public static <T> void copyUntilLevel(Tree<T> tree, int maxLevel, List<T> result) {
+        copyUntilLevelHelper(tree, maxLevel, 0, result);
+    }
+
+    private static <T> void copyUntilLevelHelper(Tree<T> tree, int maxLevel, int currentLevel, List<T> result) {
+        if (tree.isEmpty() || currentLevel > maxLevel) return;
+
+        // Añadir el valor actual
+        result.add(tree.getRootValue());
+
+        // Si aún no hemos llegado al nivel máximo, copiar los hijos
+        if (currentLevel < maxLevel && tree.hasChildren()) {
+            Tree<T> child = tree.getLeftMostChild();
+            while (child != null) {
+                copyUntilLevelHelper(child, maxLevel, currentLevel + 1, result);
+                child = child.hasRightSibling() ? child.getRightSibling() : null;
+            }
+        }
+    }
+
 }
