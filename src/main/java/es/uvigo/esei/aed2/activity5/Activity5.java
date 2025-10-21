@@ -89,17 +89,24 @@ public class Activity5 {
     }
 
     //exercise 4
+    // Árbol de selección: cada nodo debe ser <= que todos sus hijos
     public static <T extends Comparable<T>> boolean isSelection(Tree<T> tree) {
         try {
             if (tree.isEmpty()) return true;
             if (!tree.hasChildren()) return true;
+
             T root = tree.getRootValue();
             Tree<T> child = tree.getLeftMostChild();
+
             while (child != null) {
-                T childVal = child.getRootValue();
-                if (root.compareTo(childVal) > 0) return false;
-                if (!isSelection(child)) return false;
-                child = child.hasRightSibling() ? child.getRightSibling() : null;
+                if (!child.isEmpty()) {
+                    T childVal = child.getRootValue();
+                    // La raíz debe ser menor o igual que cada hijo
+                    if (root.compareTo(childVal) > 0) return false;
+                    // Verificar recursivamente cada subárbol
+                    if (!isSelection(child)) return false;
+                    child = child.hasRightSibling() ? child.getRightSibling() : null;
+                }
             }
             return true;
         } catch (EmptyTreeException e) {
@@ -108,37 +115,129 @@ public class Activity5 {
     }
 
     //exercise 5
+    // Devuelve el nivel donde está el valor (-1 si no existe)
     public static <T> int getLevel(Tree<T> tree, T value) {
-        // TODO: Implementa la búsqueda recursiva del nivel de un valor en el árbol
+        return getLevelHelper(tree, value, 0);
+    }
+
+    private static <T> int getLevelHelper(Tree<T> tree, T value, int currentLevel) {
+        if (tree.isEmpty()) return -1;
+
+        // Si encontramos el valor, devolvemos el nivel actual
+        if (Objects.equals(tree.getRootValue(), value)) return currentLevel;
+
+        // Buscar en los hijos
+        if (tree.hasChildren()) {
+            Tree<T> child = tree.getLeftMostChild();
+            while (child != null) {
+                int result = getLevelHelper(child, value, currentLevel + 1);
+                if (result != -1) return result; // Encontrado
+                child = child.hasRightSibling() ? child.getRightSibling() : null;
+            }
+        }
         return -1;
     }
 
     //exercise 6
+    // Grado del árbol: máximo número de hijos que tiene cualquier nodo
     public static <T> int getGrade(Tree<T> tree) {
-        // TODO: Implementa la obtención recursiva del grado máximo del árbol
-        return 0;
+        if (tree.isEmpty()) return 0;
+
+        int maxGrade = 0;
+
+        // Contar hijos del nodo actual
+        if (tree.hasChildren()) {
+            int childCount = 0;
+            Tree<T> child = tree.getLeftMostChild();
+            while (child != null) {
+                childCount++;
+                // Obtener el grado máximo de cada subárbol
+                int childGrade = getGrade(child);
+                maxGrade = Math.max(maxGrade, childGrade);
+                child = child.hasRightSibling() ? child.getRightSibling() : null;
+            }
+            maxGrade = Math.max(maxGrade, childCount);
+        }
+
+        return maxGrade;
     }
 
     //exercise 7
+    // Altura: máxima distancia desde la raíz hasta una hoja
     public static <T> int getHeight(Tree<T> tree) {
-        // TODO: Implementa la obtención recursiva de la altura del árbol
-        return 0;
+        if (tree.isEmpty() || !tree.hasChildren()) return 0;
+
+        int maxHeight = 0;
+        Tree<T> child = tree.getLeftMostChild();
+
+        while (child != null) {
+            int childHeight = getHeight(child);
+            maxHeight = Math.max(maxHeight, childHeight);
+            child = child.hasRightSibling() ? child.getRightSibling() : null;
+        }
+
+        return maxHeight + 1;
     }
 
     //exercise 8
+    // Recorrido en anchura (por niveles)
     public static <T> void breadthOrder(Tree<T> tree) {
-        // TODO: Implementa el recorrido en anchura del árbol n-ario
+        if (tree.isEmpty()) return;
+
+        // Usar una cola para el recorrido por niveles
+        java.util.Queue<Tree<T>> queue = new java.util.LinkedList<>();
+        queue.add(tree);
+
+        while (!queue.isEmpty()) {
+            Tree<T> current = queue.poll();
+            System.out.println(current.getRootValue());
+
+            // Añadir todos los hijos a la cola
+            if (current.hasChildren()) {
+                Tree<T> child = current.getLeftMostChild();
+                while (child != null) {
+                    queue.add(child);
+                    child = child.hasRightSibling() ? child.getRightSibling() : null;
+                }
+            }
+        }
     }
 
     //exercise 9
+    // Cuenta cuántos valores pares hay en el árbol
     public static int getNumberOfEvenValues(Tree<Integer> tree) {
-        // TODO: Implementa el conteo recursivo de valores pares en el árbol
-        return 0;
+        if (tree.isEmpty()) return 0;
+
+        int count = (tree.getRootValue() % 2 == 0) ? 1 : 0;
+
+        if (tree.hasChildren()) {
+            Tree<Integer> child = tree.getLeftMostChild();
+            while (child != null) {
+                count += getNumberOfEvenValues(child);
+                child = child.hasRightSibling() ? child.getRightSibling() : null;
+            }
+        }
+
+        return count;
     }
 
     //exercise 10
+    // Obtiene todas las hojas del árbol en una lista (nodos sin hijos)
     public static <T> void getListLeaves(Tree<T> tree, List<T> list) {
-        // TODO: Implementa la obtención recursiva de las hojas del árbol en una lista
+        if (tree.isEmpty()) return;
+
+        // Si es una hoja, añadirla a la lista
+        if (!tree.hasChildren()) {
+            list.add(tree.getRootValue());
+            return;
+        }
+
+        // Recorrer todos los hijos
+        Tree<T> child = tree.getLeftMostChild();
+        while (child != null) {
+            getListLeaves(child, list);
+            child = child.hasRightSibling() ? child.getRightSibling() : null;
+        }
     }
 
 }
