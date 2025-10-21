@@ -1,27 +1,91 @@
 package es.uvigo.esei.aed2.activity5;
 
+import es.uvigo.esei.aed2.tree.exceptions.EmptyTreeException;
 import es.uvigo.esei.aed2.tree.nary.Tree;
 
 import java.util.List;
+import java.util.Objects;
 
 public class Activity5 {
 
     //exercise 1
     public static int getSum(Tree<Integer> tree) {
-        // TODO: Implementa la suma recursiva de los valores del árbol n-ario
-        return 0;
+        if (tree.isEmpty()) return 0;
+
+        int sum = tree.getRootValue();
+
+        if (tree.hasChildren()) {
+            Tree<Integer> currentSibling = tree.getLeftMostChild();
+            while (true) {
+                sum += getSum(currentSibling);
+                if (!currentSibling.hasRightSibling()) break;
+                currentSibling = currentSibling.getRightSibling();
+            }
+        }
+
+        return sum;
     }
 
     //exercise 2
-    public static <T> boolean isEqualStructure(Tree<T> treeA, Tree<T> treeB) {
-        // TODO: Implementa la comprobación recursiva de igualdad de estructura entre dos árboles n-arios
-        return false;
+    public static <T> boolean isEqualStructure(Tree<T> a, Tree<T> b) {
+        try {
+            // Caso base: ambos vacíos
+            if (a.isEmpty() && b.isEmpty()) return true;
+
+            // Si uno está vacío y el otro no
+            if (a.isEmpty() || b.isEmpty()) return false;
+
+            // Comparamos las raíces, considerando 'null'
+            T valA = a.getRootValue();
+            T valB = b.getRootValue();
+
+            if (!Objects.equals(valA, valB)) return false;
+
+            // Si uno tiene hijos y el otro no -> estructuras diferentes
+            if (a.hasChildren() != b.hasChildren()) return false;
+
+            // Comparamos recursivamente los hijos
+            Tree<T> childA = a.hasChildren() ? a.getLeftMostChild() : null;
+            Tree<T> childB = b.hasChildren() ? b.getLeftMostChild() : null;
+
+            while (childA != null && childB != null) {
+                if (!isEqualStructure(childA, childB)) return false;
+
+                childA = childA.hasRightSibling() ? childA.getRightSibling() : null;
+                childB = childB.hasRightSibling() ? childB.getRightSibling() : null;
+            }
+
+            // Si uno tiene más hermanos que el otro
+            return childA == null && childB == null;
+
+        } catch (EmptyTreeException e) {
+            // Si hay inconsistencia interna en el árbol
+            return false;
+        }
     }
+
 
     //exercise 3
     public static <T> boolean is23Tree(Tree<T> tree) {
-        // TODO: Implementa la comprobación recursiva de si el árbol es un 2-3 árbol
-        return false;
+        if (tree.isEmpty()) return true;
+
+        // Si es una hoja (no tiene hijos), es válido
+        if (!tree.hasChildren()) return true;
+
+        // Contar el número de hijos
+        int childCount = 0;
+        Tree<T> currentChild = tree.getLeftMostChild();
+
+        while (currentChild != null) {
+            childCount++;
+            // Verificar recursivamente cada hijo
+            if (!is23Tree(currentChild)) return false;
+
+            currentChild = currentChild.hasRightSibling() ? currentChild.getRightSibling() : null;
+        }
+
+        // Un nodo interno debe tener exactamente 2 o 3 hijos
+        return childCount == 2 || childCount == 3;
     }
 
     //exercise 4

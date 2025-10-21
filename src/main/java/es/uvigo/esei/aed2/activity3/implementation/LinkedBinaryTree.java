@@ -30,15 +30,14 @@ public class LinkedBinaryTree<T> implements BinaryTree<T> {
     }
 
     private LinkedBinaryTreeNode<T> buildNodeFromTree(BinaryTree<T> tree) {
-        if (tree.isEmpty()) return null;
+        if (tree == null || tree.isEmpty()) return null;
 
         return new LinkedBinaryTreeNode<>(
             tree.getRootValue(),
             tree.hasLeftChild() ? buildNodeFromTree(tree.getLeftChild()) : null,
-            tree.hasLeftChild() ? buildNodeFromTree(tree.getRightChild()) : null
+            tree.hasRightChild() ? buildNodeFromTree(tree.getRightChild()) : null
         );
     }
-
     // Métodos lanzan excepción
     @Override
     public T getRootValue() throws EmptyTreeException {
@@ -103,7 +102,7 @@ public class LinkedBinaryTree<T> implements BinaryTree<T> {
     public BinaryTree<T> getRightChild() throws EmptyTreeException {
         if (this.isEmpty()) throw new EmptyTreeException("The tree has no values");
 
-        if (this.hasLeftChild()) return new LinkedBinaryTree<>(this.rootNode.getRightChild());
+        if (this.hasRightChild()) return new LinkedBinaryTree<>(this.rootNode.getRightChild());
         else return new LinkedBinaryTree<>();
     }
 
