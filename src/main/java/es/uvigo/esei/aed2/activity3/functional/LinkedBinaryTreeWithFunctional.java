@@ -2,7 +2,6 @@ package es.uvigo.esei.aed2.activity3.functional;
 
 import es.uvigo.esei.aed2.activity3.implementation.LinkedBinaryTree;
 import es.uvigo.esei.aed2.tree.binary.BinaryTree;
-import es.uvigo.esei.aed2.tree.exceptions.EmptyTreeException;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -35,38 +34,25 @@ public class LinkedBinaryTreeWithFunctional<T> extends LinkedBinaryTree<T> imple
         if (tree == null || tree.isEmpty()) return;
 
         // 1) Procesar la raíz
-        try {
-            T value = tree.getRootValue();
-            if (filter.test(value)) action.accept(value);
-        } catch (EmptyTreeException e) {
-            return; // raíz inesperadamente vacía -> no hay más que hacer aquí
-        }
+        T value = tree.getRootValue();
+        if (filter.test(value)) action.accept(value);
 
         // 2) Subárbol izquierdo
-        try {
-            if (tree.hasLeftChild()) {
-                BinaryTree<T> left = tree.getLeftChild(); // puede lanzar EmptyTreeException
-                if (left != null && !left.isEmpty()) {
-                    forEach(left, action, filter);
-                }
+        if (tree.hasLeftChild()) {
+            BinaryTree<T> left = tree.getLeftChild();
+            if (left != null && !left.isEmpty()) {
+                forEach(left, action, filter);
             }
-        } catch (EmptyTreeException ignored) {
-
         }
 
         // 3) Subárbol derecho
-        try {
-            if (tree.hasRightChild()) {
-                BinaryTree<T> right = tree.getRightChild();
-                if (right != null && !right.isEmpty()) {
-                    forEach(right, action, filter);
-                }
+        if (tree.hasRightChild()) {
+            BinaryTree<T> right = tree.getRightChild();
+            if (right != null && !right.isEmpty()) {
+                forEach(right, action, filter);
             }
-        } catch (EmptyTreeException ignored) {
-            // ignoramos para permitir continuar (pero puedes loguearlo en debug)
         }
     }
-
 
 
     @Override

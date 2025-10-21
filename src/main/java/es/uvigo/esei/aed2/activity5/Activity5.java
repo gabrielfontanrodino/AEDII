@@ -90,8 +90,21 @@ public class Activity5 {
 
     //exercise 4
     public static <T extends Comparable<T>> boolean isSelection(Tree<T> tree) {
-        // TODO: Implementa la comprobación recursiva de si el árbol es de selección
-        return false;
+        try {
+            if (tree.isEmpty()) return true;
+            if (!tree.hasChildren()) return true;
+            T root = tree.getRootValue();
+            Tree<T> child = tree.getLeftMostChild();
+            while (child != null) {
+                T childVal = child.getRootValue();
+                if (root.compareTo(childVal) > 0) return false;
+                if (!isSelection(child)) return false;
+                child = child.hasRightSibling() ? child.getRightSibling() : null;
+            }
+            return true;
+        } catch (EmptyTreeException e) {
+            return false;
+        }
     }
 
     //exercise 5
