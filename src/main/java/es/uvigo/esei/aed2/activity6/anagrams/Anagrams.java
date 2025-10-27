@@ -1,7 +1,9 @@
 package es.uvigo.esei.aed2.activity6.anagrams;
 
-import java.util.List;
-import java.util.Set;
+import es.uvigo.esei.aed2.activity6.HashMap.HashMap;
+import es.uvigo.esei.aed2.map.Map;
+
+import java.util.*;
 
 /*-
  * #%L
@@ -32,9 +34,49 @@ import java.util.Set;
 
 public class Anagrams {
 
+    /**
+     * Agrupa palabras en conjuntos de anagramas usando tu implementación de HashMap.
+     */
     public static Set<Set<String>> getAnagrams(List<String> words) {
-        // TODO: Implementa la obtención de los conjuntos de anagramas a partir de la agrupación
-        return null;
+
+        Map<String, List<String>> anagramGroups = new HashMap<>();
+
+        if (words == null || words.isEmpty()) {
+            return new HashSet<>();
+        }
+
+        // Iterar sobre cada palabra
+        for (String word : words) {
+
+            // Crear la clave (palabra ordenada)
+            char[] chars = word.toCharArray();
+            Arrays.sort(chars);
+            String sortedKey = new String(chars);
+
+            // Obtener la lista de anagramas actual para esta clave
+            List<String> currentGroup = anagramGroups.get(sortedKey);
+
+            if (currentGroup == null) {
+                // Si no existe, crear la lista y añadirla al map
+                currentGroup = new ArrayList<>();
+                anagramGroups.add(sortedKey, currentGroup);
+            }
+
+            // Añadir la palabra original al grupo
+            currentGroup.add(word);
+        }
+
+        // Convertir los valores del Map (Iterator<List<String>>) a Set<Set<String>>
+        Set<Set<String>> finalGroups = new HashSet<>();
+        Iterator<List<String>> groupsIterator = anagramGroups.getValues();
+
+        while (groupsIterator.hasNext()) {
+            List<String> groupList = groupsIterator.next();
+            // Convertir la lista de anagramas en un conjunto
+            finalGroups.add(new HashSet<>(groupList));
+        }
+
+        return finalGroups;
     }
 
 }
