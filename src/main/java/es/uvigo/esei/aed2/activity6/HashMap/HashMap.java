@@ -2,10 +2,7 @@ package es.uvigo.esei.aed2.activity6.HashMap;
 
 import es.uvigo.esei.aed2.map.Map;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 public class HashMap<K, V> implements Map<K, V> {
     private static final int CAPACITY = 50;
@@ -19,43 +16,108 @@ public class HashMap<K, V> implements Map<K, V> {
 
     @SuppressWarnings("unchecked")
     private HashMap(int capacity) throws IllegalArgumentException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        if (capacity <= 0) throw new IllegalArgumentException("The map size cannot be zero or lower");
+
+        this.size = 0;
+        map = (List<Pair<K, V>>[]) new List[CAPACITY];
+
+        for (int i = 0; i < CAPACITY; i++) {
+            map[i] = new LinkedList<>();
+        }
     }
 
-    // Métodos lanzan excepción
+    private int hashKey(K key) {
+        return Math.abs(key.hashCode()) % map.length;
+    }
+
     @Override
     public int size() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return this.size;
     }
 
     @Override
     public V get(K key) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        if(key == null) return null;
+        int index = hashKey(key);
+
+        for (Pair<K, V> pair : map[index]) {
+            if (pair.getKey().equals(key)) {
+                return pair.getValue();
+            }
+        }
+        return null;
     }
 
     @Override
     public void add(K key, V value) throws NullPointerException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        int index = hashKey(key);
+        List<Pair<K, V>> bucket = map[index];
+
+        // check if key already exists
+        for (Pair<K, V> pair : bucket) {
+            if (pair.getKey().equals(key)) {
+                pair.setValue(value); // replace value
+                return;
+            }
+        }
+
+        bucket.add(new Pair<>(key, value)); // add new pair
+        size++;
     }
 
     @Override
     public V remove(K key) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        if (key == null) return null;
+
+        int index = hashKey(key);
+        List<Pair<K, V>> bucket = map[index];
+
+        Iterator<Pair<K, V>> iterator = bucket.iterator();
+
+        while (iterator.hasNext()) {
+            Pair<K, V> pair = iterator.next();
+            if (pair.getKey().equals(key)) {
+                iterator.remove();
+                size--;
+                return pair.getValue();
+            }
+        }
+
+        return null; // key not found
     }
 
     @Override
     public Set<K> getKeys() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        Set<K> foundKeys = new HashSet<>();
+
+        for (List<Pair<K, V>> bucket : map) {
+            for (Pair<K, V> entry : bucket) {
+                foundKeys.add(entry.k);
+            }
+        }
+
+        return foundKeys;
     }
+
 
     @Override
     public Iterator<V> getValues() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        List<V> foundValues = new ArrayList<>();
+
+        for (List<Pair<K, V>> bucket : map) {
+            for (Pair<K, V> entry : bucket) {
+                foundValues.add(entry.v);
+            }
+        }
+
+        return foundValues.iterator();
     }
 
     @Override
     public void clear() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        for(List<Pair<K, V>> bucket: map) {
+            bucket.clear();
+        }
     }
 
     private static class Pair<K, V> {
