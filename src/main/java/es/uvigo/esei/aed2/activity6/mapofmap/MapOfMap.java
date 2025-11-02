@@ -5,6 +5,7 @@ import es.uvigo.esei.aed2.graph.Edge;
 import es.uvigo.esei.aed2.graph.Graph;
 import es.uvigo.esei.aed2.graph.Vertex;
 import es.uvigo.esei.aed2.map.Map;
+
 import java.util.Set;
 import java.util.HashSet;
 
@@ -111,7 +112,7 @@ public class MapOfMap<T, E> implements Graph<T, E> {
     }
 
     @Override
-    public boolean addEdge(Vertex<T> source, Vertex<T> target, E label) throws NullPointerException, IllegalArgumentException{
+    public boolean addEdge(Vertex<T> source, Vertex<T> target, E label) throws NullPointerException, IllegalArgumentException {
         if (source == null || target == null) {
             throw new NullPointerException("Los vértices no pueden ser null.");
         }
@@ -168,7 +169,11 @@ public class MapOfMap<T, E> implements Graph<T, E> {
     }
 
     @Override
-    public void clear(){
-        mapOfVertices.clear();
+    public void clear() {
+        // Eliminar las entradas una a una para evitar problemas, ya que la
+        // implementación de Map.clear() no borra correctamente las entradas internas.
+        for (Vertex<T> v : new HashSet<>(mapOfVertices.getKeys())) {
+            mapOfVertices.remove(v);
+        }
     }
 }
