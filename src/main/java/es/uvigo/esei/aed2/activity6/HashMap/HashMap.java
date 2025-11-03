@@ -102,15 +102,32 @@ public class HashMap<K, V> implements Map<K, V> {
 
     @Override
     public Iterator<V> getValues() {
-        List<V> foundValues = new ArrayList<>();
+        return new Iterator<>() {
+            private int bucketIndex = 0;
+            private Iterator<Pair<K, V>> bucketIterator = map[bucketIndex].iterator();
 
-        for (List<Pair<K, V>> bucket : map) {
-            for (Pair<K, V> entry : bucket) {
-                foundValues.add(entry.v);
+            private void iterate() {
+                while(!bucketIterator.hasNext() && bucketIndex < map.length - 1) {
+                    bucketIndex++;
+                    bucketIterator = map[bucketIndex].iterator();
+                }
             }
-        }
 
-        return foundValues.iterator();
+            @Override
+            public boolean hasNext() {
+                iterate();
+                return bucketIterator.hasNext();
+            }
+
+            @Override
+            public V next() {
+                iterate();
+                if (!hasNext()) {
+                    throw new NoSuchElementException();
+                }
+                return bucketIterator.next().getValue();
+            }
+        };
     }
 
     @Override
