@@ -27,8 +27,14 @@ package es.uvigo.esei.aed2.activity6.relatedwords;
  * #L%
  */
 
+import es.uvigo.esei.aed2.activity6.HashMap.HashMap;
+import es.uvigo.esei.aed2.activity6.mapofmap.MapOfMap;
 import es.uvigo.esei.aed2.graph.Graph;
+import es.uvigo.esei.aed2.graph.Vertex;
+import es.uvigo.esei.aed2.map.Map;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class RelatedWords {
@@ -39,7 +45,71 @@ public class RelatedWords {
      * @return grafo de palabras relacionadas.
      */
     public static Graph<String, Integer> buildGraph(List<String> words) {
-        // TODO: Implementa la construcción del grafo de palabras relacionadas
-        return null;
+
+        Graph<String, Integer> graph = new MapOfMap<>();
+
+        if (words == null || words.isEmpty()) {
+            return graph;
+        }
+
+        // Añade todos los vértices al grafo
+        for (String w : words) {
+            graph.addVertex(new Vertex<>(w));
+        }
+
+        // Agrupa palabras por clave con un guion en cada posición
+        Map<String, List<String>> map = new HashMap<>();
+
+        int wordsLength = words.getFirst().length();
+
+        for (String word : words) {
+            //Si las palabras no tienen la misma longitud, no pueden estar relacionadas
+            if (word.length() != wordsLength) {
+                continue;
+            }
+
+            //Crear entradas en el mapa con guion en cada posición
+            for (int i = 0; i < wordsLength; i++) {
+                String key = word.substring(0, i) + '_' + word.substring(i + 1);
+
+                List<String> list = map.get(key);
+
+                if (list == null) {
+                    list = new ArrayList<>();
+                    map.add(key, list);
+                }
+
+                list.add(word);
+            }
+        }
+
+        System.out.println(map.size() + " buckets creados.");
+        System.out.println(map.getKeys());
+
+        for (var bucketKey : map.getKeys()) {
+            System.out.println("Bucket " + bucketKey + ": " + map.get(bucketKey));
+        }
+
+        // Conecta en el grafo todas las palabras que comparten la misma clave
+        Iterator<List<String>> it = map.getValues();
+
+        while (it.hasNext()) {
+            List<String> wordsGroup = it.next();
+            for (int i = 0; i < wordsGroup.size(); i++) {
+                for (int j = i + 1; j < wordsGroup.size(); j++) {
+
+                    Vertex<String> v1 = new Vertex<>(wordsGroup.get(i));
+                    Vertex<String> v2 = new Vertex<>(wordsGroup.get(j));
+
+                    // Añadir la arista en una dirección
+                    graph.addEdge(v1, v2, 0);
+
+                    // Añadir la arista inversa para un grafo no dirigido.
+                    graph.addEdge(v2, v1, 0);
+                }
+            }
+        }
+
+        return graph;
     }
 }

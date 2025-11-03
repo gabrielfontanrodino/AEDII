@@ -28,6 +28,7 @@ package es.uvigo.esei.aed2.activity6.topologicalordering;
  */
 
 import es.uvigo.esei.aed1.tads.queue.LinkedQueue;
+import es.uvigo.esei.aed1.tads.queue.Queue;
 import es.uvigo.esei.aed2.activity6.HashMap.HashMap;
 import es.uvigo.esei.aed2.graph.Graph;
 import es.uvigo.esei.aed2.graph.Vertex;
@@ -48,7 +49,7 @@ public class TopologicalOrdering {
         // Si el grafo es nulo devolvemos lista vacía
         if (graph == null) return order;
 
-        // Mapa de grados de entrada (indegree) para cada vértice
+        // Mapa de grados de entrada (in degree) para cada vértice
         Map<Vertex<T>, Integer> indeg = new HashMap<>();
         // Inicializamos todos los indeg a 0
         for (Vertex<T> v : graph.getVertices()) {
@@ -62,22 +63,22 @@ public class TopologicalOrdering {
             }
         }
 
-        // Cola para procesar vértices con indeg == 0
-        Queue<Vertex<T>> q = new PriorityQueue<>();
+        // Cola para procesar vértices con indeg == 0 (algoritmo de Kahn)
+        Queue<Vertex<T>> queue = new LinkedQueue<>();
         // Encolamos inicialmente todos los vértices sin predecesores
         for (Vertex<T> v : graph.getVertices()) {
-            if (indeg.get(v) == 0) q.add(v);
+            if (indeg.get(v) == 0) queue.add(v);
         }
 
-        // Procesamos la cola: extraemos vértices sin predecesores,
+        // Procesamos la cola extrayendo los vértices sin predecesores,
         // los añadimos al orden y reducimos el indeg de sus sucesores.
-        while (!q.isEmpty()) {
-            Vertex<T> v = q.remove();
+        while (!queue.isEmpty()) {
+            Vertex<T> v = queue.remove();
             order.add(v);
-            for (Vertex<T> suc : graph.getAdjacentsVertex(v)) {
-                int d = indeg.get(suc) - 1; // decremento del indeg
-                indeg.add(suc, d);         // actualizamos el mapa
-                if (d == 0) q.add(suc);    // si llega a cero, encolar
+            for (Vertex<T> adjacentVertex : graph.getAdjacentsVertex(v)) {
+                int d = indeg.get(adjacentVertex) - 1; // decremento del indeg
+                indeg.add(adjacentVertex, d);         // actualizamos el mapa
+                if (d == 0) queue.add(adjacentVertex);    // si llega a cero, metemos en la cola
             }
         }
 
