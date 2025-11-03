@@ -27,10 +27,13 @@ package es.uvigo.esei.aed2.activity6.topologicalordering;
  * #L%
  */
 
+import es.uvigo.esei.aed1.tads.queue.LinkedQueue;
+import es.uvigo.esei.aed2.activity6.HashMap.HashMap;
 import es.uvigo.esei.aed2.graph.Graph;
 import es.uvigo.esei.aed2.graph.Vertex;
+import es.uvigo.esei.aed2.map.Map;
 
-import java.util.List;
+import java.util.*;
 
 public class TopologicalOrdering {
     /**
@@ -40,7 +43,45 @@ public class TopologicalOrdering {
      * @return lista de vértices en orden topológico.
      */
     public static <T, E> List<Vertex<T>> getTopologicalOrder(Graph<T, E> graph) {
-        // TODO: Implementa el cálculo del orden topológico de un grafo
-        return null;
+        // Resultado: lista que contendrá el orden topológico
+        List<Vertex<T>> order = new ArrayList<>();
+        // Si el grafo es nulo devolvemos lista vacía
+        if (graph == null) return order;
+
+        // Mapa de grados de entrada (indegree) para cada vértice
+        Map<Vertex<T>, Integer> indeg = new HashMap<>();
+        // Inicializamos todos los indeg a 0
+        for (Vertex<T> v : graph.getVertices()) {
+            indeg.add(v, 0);
+        }
+
+        // Calculamos el grado de entrada real sumando 1 por cada arista entrante
+        for (Vertex<T> v : graph.getVertices()) {
+            for (Vertex<T> suc : graph.getAdjacentsVertex(v)) {
+                indeg.add(suc, indeg.get(suc) + 1);
+            }
+        }
+
+        // Cola para procesar vértices con indeg == 0
+        Queue<Vertex<T>> q = new PriorityQueue<>();
+        // Encolamos inicialmente todos los vértices sin predecesores
+        for (Vertex<T> v : graph.getVertices()) {
+            if (indeg.get(v) == 0) q.add(v);
+        }
+
+        // Procesamos la cola: extraemos vértices sin predecesores,
+        // los añadimos al orden y reducimos el indeg de sus sucesores.
+        while (!q.isEmpty()) {
+            Vertex<T> v = q.remove();
+            order.add(v);
+            for (Vertex<T> suc : graph.getAdjacentsVertex(v)) {
+                int d = indeg.get(suc) - 1; // decremento del indeg
+                indeg.add(suc, d);         // actualizamos el mapa
+                if (d == 0) q.add(suc);    // si llega a cero, encolar
+            }
+        }
+
+        // Devolvemos la lista con el orden topológico (puede ser parcial si hay ciclos)
+        return order;
     }
 }
