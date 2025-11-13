@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.Set;
 
 import static es.uvigo.esei.aed2.activity6.anagrams.Anagrams.getAnagrams;
+import static es.uvigo.esei.aed2.activity6.anagrams.Anagrams.getAnagramsEfficient;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -59,6 +60,29 @@ public class AnagramsTestCase {
         Set<Set<String>> anagrams = getAnagrams(words);
 
         assertThat(setOfAnagrams.equals(anagrams), is(true));
+    }
+
+    @Test
+    public void testGetAnagramsLargeList() {
+        List<String> words = List.of(
+            "listen", "silent", "enlist", "inlets",
+            "rat", "tar", "art",
+            "evil", "vile", "live",
+            "bat", "tab",
+            "cat", "act"
+        );
+
+        Set<Set<String>> expectedAnagrams = Set.of(
+            Set.of("listen", "silent", "enlist", "inlets"),
+            Set.of("rat", "tar", "art"),
+            Set.of("evil", "vile", "live"),
+            Set.of("bat", "tab"),
+            Set.of("cat", "act")
+        );
+
+        Set<Set<String>> anagrams = getAnagramsEfficient(words);
+
+        assertThat(expectedAnagrams.equals(anagrams), is(true));
     }
 
 }

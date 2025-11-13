@@ -79,4 +79,68 @@ public class Anagrams {
         return finalGroups;
     }
 
+    private static String buildSignature(String word) {
+        //1. Crear un array con espacio para todas las letras del alfabeto
+        int[] letterCounts = new int[26];
+
+        //2. Convertir la palabra a minúsculas, convertirla en un array de caracteres y contar las apariciones de cada letra
+        for (char c : word.toLowerCase().toCharArray()) {
+            if (c >= 'a' && c <= 'z') {
+                letterCounts[c - 'a']++;
+            }
+        }
+
+        //3. Construir la firma a partir de las cuentas de letras
+        StringBuilder signatureBuilder = new StringBuilder();
+
+        for (int i = 0; i < letterCounts.length; i++) {
+            if (letterCounts[i] > 0) {                      // Solo incluir letras que aparecen en la palabra
+                signatureBuilder.append((char) (i + 'a'));  // Añadir la letra (le sumamos 'a' para obtener el carácter correcto)
+                signatureBuilder.append(letterCounts[i]);   // Añadir el conteo de la letra
+            }
+        }
+
+        return signatureBuilder.toString();
+    }
+
+    public static Set<Set<String>> getAnagramsEfficient(List<String> words) {
+
+        Map<String, List<String>> anagramGroups = new HashMap<>();
+
+        if (words == null || words.isEmpty()) {
+            return new HashSet<>();
+        }
+
+        // Iterar sobre cada palabra
+        for (String word : words) {
+
+            // Crear la clave (palabra ordenada)
+            String key = buildSignature(word);
+
+            // Obtener la lista de anagramas actual para esta clave
+            List<String> currentGroup = anagramGroups.get(key);
+
+            if (currentGroup == null) {
+                // Si no existe, crear la lista y añadirla al map
+                currentGroup = new ArrayList<>();
+                anagramGroups.add(key, currentGroup);
+            }
+
+            // Añadir la palabra original al grupo
+            currentGroup.add(word);
+        }
+
+        // Convertir los valores del Map (Iterator<List<String>>) a Set<Set<String>>
+        Set<Set<String>> finalGroups = new HashSet<>();
+        Iterator<List<String>> groupsIterator = anagramGroups.getValues();
+
+        while (groupsIterator.hasNext()) {
+            List<String> groupList = groupsIterator.next();
+            // Convertir la lista de anagramas en un conjunto
+            finalGroups.add(new HashSet<>(groupList));
+        }
+
+        return finalGroups;
+    }
+
 }

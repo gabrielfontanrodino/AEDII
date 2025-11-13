@@ -4,6 +4,8 @@ import es.uvigo.esei.aed2.map.Map;
 
 import java.util.*;
 
+import static java.util.Objects.requireNonNull;
+
 public class HashMap<K, V> implements Map<K, V> {
     private static final int CAPACITY = 50;
 
@@ -37,7 +39,7 @@ public class HashMap<K, V> implements Map<K, V> {
 
     @Override
     public V get(K key) {
-        if(key == null) return null;
+        if (key == null) return null;
         int index = hashKey(key);
 
         for (Pair<K, V> pair : map[index]) {
@@ -50,7 +52,7 @@ public class HashMap<K, V> implements Map<K, V> {
 
     @Override
     public void add(K key, V value) throws NullPointerException {
-        int index = hashKey(key);
+        int index = hashKey(requireNonNull(key, "Key cannot be null"));
         List<Pair<K, V>> bucket = map[index];
 
         // check if key already exists
@@ -106,19 +108,39 @@ public class HashMap<K, V> implements Map<K, V> {
             private int bucketIndex = 0;
             private Iterator<Pair<K, V>> bucketIterator = map[bucketIndex].iterator();
 
+            /**
+             * Ensures that the `bucketIterator` is pointing to a valid bucket with elements.
+             * If the current bucket does not have any elements, it advances to the next bucket
+             * until it finds one with elements or reaches the end of the map.
+             */
             private void iterate() {
-                while(!bucketIterator.hasNext() && bucketIndex < map.length - 1) {
-                    bucketIndex++;
-                    bucketIterator = map[bucketIndex].iterator();
+                while (!bucketIterator.hasNext() && bucketIndex < map.length - 1) {
+                    bucketIndex++; // Move to the next bucket
+                    bucketIterator = map[bucketIndex].iterator(); // Update the iterator for the new bucket
                 }
             }
 
+            /**
+             * Checks if there are more elements to iterate over in the map.
+             * This method ensures the iterator is positioned at a valid bucket
+             * with elements before checking for the next element.
+             *
+             * @return true if there are more elements to iterate over, false otherwise
+             */
             @Override
             public boolean hasNext() {
                 iterate();
                 return bucketIterator.hasNext();
             }
 
+            /**
+             * Retrieves the next value in the iteration.
+             * This method ensures the iterator is positioned at a valid bucket
+             * and throws an exception if there are no more elements to iterate over.
+             *
+             * @return the next value in the iteration
+             * @throws NoSuchElementException if there are no more elements to iterate over
+             */
             @Override
             public V next() {
                 iterate();
@@ -132,7 +154,7 @@ public class HashMap<K, V> implements Map<K, V> {
 
     @Override
     public void clear() {
-        for(List<Pair<K, V>> bucket: map) {
+        for (List<Pair<K, V>> bucket : map) {
             bucket.clear();
         }
     }

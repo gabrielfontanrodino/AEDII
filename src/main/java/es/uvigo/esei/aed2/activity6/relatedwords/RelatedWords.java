@@ -101,6 +101,9 @@ public class RelatedWords {
                     Vertex<String> v1 = new Vertex<>(wordsGroup.get(i));
                     Vertex<String> v2 = new Vertex<>(wordsGroup.get(j));
 
+                    //Le pongo etiqueta 0 a las aristas porque son las definidas en los tests.
+                    //En este caso nos dan igual las etiquetas.
+
                     // Añadir la arista en una dirección
                     graph.addEdge(v1, v2, 0);
 

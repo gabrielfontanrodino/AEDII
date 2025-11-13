@@ -52,37 +52,38 @@ public class TopologicalOrdering {
         // Mapa de grados de entrada (in degree) para cada vértice
         Map<Vertex<T>, Integer> indeg = new HashMap<>();
         // Inicializamos todos los indeg a 0
-        for (Vertex<T> v : graph.getVertices()) {
-            indeg.add(v, 0);
+        for (Vertex<T> vertex : graph.getVertices()) {
+            indeg.add(vertex, 0);
         }
 
         // Calculamos el grado de entrada real sumando 1 por cada arista entrante
-        for (Vertex<T> v : graph.getVertices()) {
-            for (Vertex<T> suc : graph.getAdjacentsVertex(v)) {
-                indeg.add(suc, indeg.get(suc) + 1);
+        for (Vertex<T> vertex : graph.getVertices()) {
+            for (Vertex<T> successor : graph.getAdjacentsVertex(vertex)) {
+                //Actualizamos el indeg del sucesor
+                indeg.add(successor, indeg.get(successor) + 1);
             }
         }
 
         // Cola para procesar vértices con indeg == 0 (algoritmo de Kahn)
         Queue<Vertex<T>> queue = new LinkedQueue<>();
         // Encolamos inicialmente todos los vértices sin predecesores
-        for (Vertex<T> v : graph.getVertices()) {
-            if (indeg.get(v) == 0) queue.add(v);
+        for (Vertex<T> vertex : graph.getVertices()) {
+            if (indeg.get(vertex) == 0) queue.add(vertex);
         }
 
         // Procesamos la cola extrayendo los vértices sin predecesores,
         // los añadimos al orden y reducimos el indeg de sus sucesores.
         while (!queue.isEmpty()) {
-            Vertex<T> v = queue.remove();
-            order.add(v);
-            for (Vertex<T> adjacentVertex : graph.getAdjacentsVertex(v)) {
-                int d = indeg.get(adjacentVertex) - 1; // decremento del indeg
-                indeg.add(adjacentVertex, d);         // actualizamos el mapa
-                if (d == 0) queue.add(adjacentVertex);    // si llega a cero, metemos en la cola
+            Vertex<T> tVertex = queue.remove();
+            order.add(tVertex);
+            for (Vertex<T> adjacentVertex : graph.getAdjacentsVertex(tVertex)) {
+                int d = indeg.get(adjacentVertex) - 1;      // decremento del indeg
+                indeg.add(adjacentVertex, d);               // actualizamos el mapa
+                if (d == 0) queue.add(adjacentVertex);      // si llega a cero, metemos en la cola
             }
         }
 
-        // Devolvemos la lista con el orden topológico (puede ser parcial si hay ciclos)
+        // Devolvemos la lista con el orden topológico
         return order;
     }
 }
