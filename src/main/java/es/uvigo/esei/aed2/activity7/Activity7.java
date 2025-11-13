@@ -35,6 +35,28 @@ import java.util.*;
 
 public class Activity7 {
 
+    private static <T, E> void dfs(Graph<T, E> graph, Vertex<T> vertex, Set<Vertex<T>> visited) {
+        visited.add(vertex);
+        for (Vertex<T> adj : graph.getAdjacentsVertex(vertex)) {
+            if (!visited.contains(adj)) dfs(graph, adj, visited);
+        }
+    }
+
+    private static <T, E> void bfs(Graph<T, E> graph, Vertex<T> vertex, Set<Vertex<T>> visited) {
+        Queue<Vertex<T>> queue = new ArrayDeque<>();
+        visited.add(vertex);
+        queue.add(vertex);
+
+        while (!queue.isEmpty()) {
+            Vertex<T> current = queue.poll();
+            for (Vertex<T> neighbor : graph.getAdjacentsVertex(current)) {
+                if (visited.add(neighbor)) {
+                    queue.add(neighbor);
+                }
+            }
+        }
+    }
+
     //exercise 1
 
     /**
@@ -130,22 +152,8 @@ public class Activity7 {
         if (graph.isEmpty()) return false;
         if (!graph.getVertices().contains(vertex)) return false;
 
-        //BFD
         Set<Vertex<T>> visited = new HashSet<>();
-        Queue<Vertex<T>> queue = new ArrayDeque<>();
-
-        visited.add(vertex);
-        queue.add(vertex);
-
-        while (!queue.isEmpty()) {
-            Vertex<T> current = queue.poll();
-            for (Vertex<T> neighbor : graph.getAdjacentsVertex(current)) {
-                if (!visited.contains(neighbor)) {
-                    visited.add(neighbor);
-                    queue.add(neighbor);
-                }
-            }
-        }
+        bfs(graph, vertex, visited);
 
         return visited.size() == graph.numberOfVertices();
     }
@@ -165,17 +173,14 @@ public class Activity7 {
      * @return true si existe un camino entre los vértices, false en caso contrario
      */
     public static <T, E> boolean thereIsPathBetweenVertices(Graph<T, E> graph, Vertex<T> source, Vertex<T> target) {
-        if (graph == null || target == null) return false;
+        if (graph == null || source == null || target == null) return false;
+        if (!graph.getVertices().contains(source) || !graph.getVertices().contains(target)) return false;
+        if (source.equals(target)) return true;
 
-        Set<Edge<T, E>> edges = graph.getEdges();
+        Set<Vertex<T>> visited = new HashSet<>();
+        bfs(graph, source, visited);
 
-        for (Edge<T, E> edge : edges) {
-            if (edge.getSource().equals(source) && edge.getTarget().equals(target)) {
-                return true;
-            }
-        }
-
-        return false;
+        return visited.contains(target);
     }
 
     //exercise 6
@@ -218,23 +223,15 @@ public class Activity7 {
         return true;
     }
 
-    private static <T, E> void dfs(Graph<T, E> graph, Vertex<T> vertex, Set<Vertex<T>> visited) {
-        System.out.println(vertex);
-        visited.add(vertex);
-        for (Vertex<T> adj : graph.getAdjacentsVertex(vertex)) {
-            if (!visited.contains(adj)) dfs(graph, adj, visited);
-        }
-    }
-
     //exercise 7
     public static <T, E> int numberOfConnectedComponents(Graph<T, E> graph) {
         int connectedComponents = 0;
 
         Set<Vertex<T>> visitedVertices = new HashSet<>();
 
-        for(Vertex<T> vertex: graph.getVertices()) {
-            if(visitedVertices.contains(vertex)) continue;
-            dfs(graph, vertex,visitedVertices);
+        for (Vertex<T> vertex : graph.getVertices()) {
+            if (visitedVertices.contains(vertex)) continue;
+            dfs(graph, vertex, visitedVertices);
             connectedComponents++;
         }
 
