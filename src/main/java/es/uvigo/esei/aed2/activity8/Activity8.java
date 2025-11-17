@@ -29,30 +29,30 @@ package es.uvigo.esei.aed2.activity8;
  */
 
 public class Activity8 {
-  private String nomActivity;
-  private int start;
-  private int end;
+    private String nomActivity;
+    private int start;
+    private int end;
 
-  public Activity8(String nomActivity, int start, int end) {
-    this.nomActivity = nomActivity;
-    this.start = start;
-    this.end = end;
-  }
+    public Activity8(String nomActivity, int start, int end) {
+        this.nomActivity = nomActivity;
+        this.start = start;
+        this.end = end;
+    }
 
-  public String getNomActivity() {
-    return nomActivity;
-  }
+    public String getNomActivity() {
+        return nomActivity;
+    }
 
-  public int getStart() {
-    return start;
-  }
+    public int getStart() {
+        return start;
+    }
 
-  public int getEnd() {
-    return end;
-  }
+    public int getEnd() {
+        return end;
+    }
 
-  @Override
-  public String toString() {
-    return "(" + nomActivity + ", " + start + ", " + end + ")";
-  }
+    @Override
+    public String toString() {
+        return "(" + nomActivity + ", " + start + ", " + end + ")";
+    }
 }

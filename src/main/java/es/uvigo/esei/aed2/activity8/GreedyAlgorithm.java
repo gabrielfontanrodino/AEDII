@@ -31,64 +31,130 @@ import java.util.Set;
 
 import es.uvigo.esei.aed2.graph.Graph;
 import es.uvigo.esei.aed2.graph.Vertex;
+import es.uvigo.esei.aed2.map.HashMap;
 import es.uvigo.esei.aed2.map.Map;
 
 public class GreedyAlgorithm {
 
-  // Exercise 1
-  public static <T> Graph<T, Integer> traveller(Graph<T, Integer> graph, Vertex<T> vertex) {
+    // Exercise 1
+    public static <T> Graph<T, Integer> traveller(Graph<T, Integer> graph, Vertex<T> vertex) {
 
-    return null;
-  }
+        return null;
+    }
 
-  // Exercise 2
-  public static <T> Graph<T, Integer> prim(Graph<T, Integer> graph, Vertex<T> vertex) {
+    // Exercise 2
+    public static <T> Graph<T, Integer> prim(Graph<T, Integer> graph, Vertex<T> vertex) {
 
-    return null;
-  }
+        return null;
+    }
 
-  // Exercise 3
-  public static <T> Map<Vertex<T>, Integer> dijkstra(Graph<T, Integer> graph, Vertex<T> vertex) {
+    // Exercise 3
+    public static <T> Map<Vertex<T>, Integer> dijkstra(Graph<T, Integer> graph, Vertex<T> vertex) {
 
-    return null;
-  }
+        return null;
+    }
 
-  // Exercise 4
-  public static <T> Map<Vertex<T>, String> colourMap(Graph<T, Integer> graph, String[] colours) {
+    // Exercise 4
+    public static <T> Map<Vertex<T>, String> colorMap(Graph<T, Integer> graph, String[] colors) {
+        Map<Vertex<T>, String> vertexColoursMap = new HashMap<>();
+        Set<Vertex<T>> toVisit = graph.getVertices();
 
-    return null;
-  }
+        for (Vertex<T> vertex : toVisit) {
+            String color = defineColor(vertex, colors, graph, vertexColoursMap);
+            vertexColoursMap.add(vertex, color);
+        }
 
-  // Exercise 5
-  public static Map<Integer, Integer> giveChange(int amountReturned, Map<Integer, Integer> changeAvailable) {
+        return vertexColoursMap;
+    }
 
-    return null;
-  }
+    private static <T> String defineColor(Vertex<T> vertex, String[] colors, Graph<T, Integer> graph, Map<Vertex<T>, String> vertexColours) {
+        if (vertex == null || graph == null || colors == null || colors.length == 0) {
+            return null;
+        }
 
-  // Exercise 6
-  public static Set<String> burnCD(int maximumCapacity, Map<String, Integer> espacePrograms) {
+        for(String currentColor : colors) {
+            boolean available = true;
 
-    return null;
-  }
+            for (Vertex<T> adjVertex : graph.getAdjacentsVertex(vertex)) {
+                String adjColour = vertexColours.get(adjVertex);
 
-  // Exercise 7
-  public static Map<String, Integer> fillRucksack(
-    int maxVolume, Map<String, Integer> amounts, Map<String, Integer> volumes
-  ) {
+                if (adjColour != null && adjColour.equals(currentColor)) {
+                    available = false;
+                    break;
+                }
 
-    return null;
-  }
+            }
 
-  // Exercise 8
-  public static Map<Vertex<String>, String> examSchedule(Graph<String, Integer> graph, String[] daysWeek) {
+            if (available) {
+                return currentColor;
+            }
+        }
 
-    return null;
-  }
+        return null;
+    }
 
-  // Exercise 9
-  public static Set<String> plannerActivities(List<Activity8> listActivities) {
+    // Exercise 5
+    public static Map<Integer, Integer> giveChange(int amountToReturn, Map<Integer, Integer> changeAvailable) {
+        Map<Integer, Integer> change = new HashMap<>();
+        int returnedValue = 0;
 
-    return null;
-  }
+        while (returnedValue < amountToReturn) {
+            Integer chosenBanknote = selectBanknote(amountToReturn, changeAvailable);
+
+            if(chosenBanknote != null) {
+                int neededBanknotes = (amountToReturn - returnedValue) / chosenBanknote;
+                int availableBanknotes = changeAvailable.get(chosenBanknote);
+
+                if(neededBanknotes > availableBanknotes) {
+                    neededBanknotes = availableBanknotes;
+                }
+
+                change.add(chosenBanknote, neededBanknotes);
+                returnedValue += chosenBanknote * neededBanknotes;
+                changeAvailable.add(chosenBanknote, availableBanknotes - neededBanknotes);
+            } else {
+                return new HashMap<>();
+            }
+        }
+
+        return change;
+    }
+
+    private static Integer selectBanknote(int amountToReturn, Map<Integer, Integer> changeAvailable) {
+        Integer highestBanknote = null;
+        Set<Integer> banknotes = changeAvailable.getKeys();
+
+        for (Integer banknote: banknotes) {
+            if(banknote > (highestBanknote != null ? highestBanknote : 0) && banknote <= amountToReturn && changeAvailable.get(banknote) > 0) {
+                highestBanknote = banknote;
+            }
+        }
+
+        return highestBanknote;
+    }
+
+    // Exercise 6
+    public static Set<String> burnCD(int maximumCapacity, Map<String, Integer> espacePrograms) {
+
+        return null;
+    }
+
+    // Exercise 7
+    public static Map<String, Integer> fillRucksack(int maxVolume, Map<String, Integer> amounts, Map<String, Integer> volumes) {
+
+        return null;
+    }
+
+    // Exercise 8
+    public static Map<Vertex<String>, String> examSchedule(Graph<String, Integer> graph, String[] daysWeek) {
+
+        return null;
+    }
+
+    // Exercise 9
+    public static Set<String> plannerActivities(List<Activity8> listActivities) {
+
+        return null;
+    }
 
 }
