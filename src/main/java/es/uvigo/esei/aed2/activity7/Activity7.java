@@ -35,6 +35,15 @@ import java.util.*;
 
 public class Activity7 {
 
+    /**
+     * Realiza una búsqueda en profundidad (DFS) en un grafo desde un vértice dado.
+     *
+     * @param <T>     el tipo de los datos almacenados en los vértices del grafo
+     * @param <E>     el tipo de los datos almacenados en las aristas del grafo
+     * @param graph   el grafo sobre el cual se realizará la búsqueda
+     * @param vertex  el vértice desde el cual se iniciará la búsqueda
+     * @param visited un conjunto que almacena los vértices visitados durante la búsqueda
+     */
     private static <T, E> void dfs(Graph<T, E> graph, Vertex<T> vertex, Set<Vertex<T>> visited) {
         visited.add(vertex);
         for (Vertex<T> adj : graph.getAdjacentsVertex(vertex)) {
@@ -42,6 +51,15 @@ public class Activity7 {
         }
     }
 
+    /**
+     * Realiza una búsqueda en anchura (BFS) en un grafo desde un vértice dado.
+     *
+     * @param <T>     el tipo de los datos almacenados en los vértices del grafo
+     * @param <E>     el tipo de los datos almacenados en las aristas del grafo
+     * @param graph   el grafo sobre el cual se realizará la búsqueda
+     * @param vertex  el vértice desde el cual se iniciará la búsqueda
+     * @param visited un conjunto que almacena los vértices visitados durante la búsqueda
+     */
     private static <T, E> void bfs(Graph<T, E> graph, Vertex<T> vertex, Set<Vertex<T>> visited) {
         Queue<Vertex<T>> queue = new ArrayDeque<>();
         visited.add(vertex);
@@ -224,6 +242,16 @@ public class Activity7 {
     }
 
     //exercise 7
+
+    /**
+     * Calcula el número de componentes conexas en un grafo.
+     * Una componente conexa es un subgrafo en el que todos los vértices están conectados entre sí.
+     *
+     * @param <T>   el tipo de los datos almacenados en los vértices del grafo
+     * @param <E>   el tipo de los datos almacenados en las aristas del grafo
+     * @param graph el grafo en el que se calcularán las componentes conexas
+     * @return el número de componentes conexas en el grafo
+     */
     public static <T, E> int numberOfConnectedComponents(Graph<T, E> graph) {
         int connectedComponents = 0;
 
@@ -234,7 +262,6 @@ public class Activity7 {
             dfs(graph, vertex, visitedVertices);
             connectedComponents++;
         }
-
 
         return connectedComponents;
     }
