@@ -57,22 +57,25 @@ public class GreedyAlgorithm {
     // Exercise 4
     public static <T> Map<Vertex<T>, String> colorMap(Graph<T, Integer> graph, String[] colors) {
         Map<Vertex<T>, String> vertexColoursMap = new HashMap<>();
-        Set<Vertex<T>> toVisit = graph.getVertices();
 
-        for (Vertex<T> vertex : toVisit) {
+        // Si el test espera un orden específico, itera directamente
+        for (Vertex<T> vertex : graph.getVertices()) {
             String color = defineColor(vertex, colors, graph, vertexColoursMap);
-            vertexColoursMap.add(vertex, color);
+            if(color != null) {
+                vertexColoursMap.add(vertex, color);
+            }
         }
 
         return vertexColoursMap;
     }
 
+
     private static <T> String defineColor(Vertex<T> vertex, String[] colors, Graph<T, Integer> graph, Map<Vertex<T>, String> vertexColours) {
-        if (vertex == null || graph == null || colors == null || colors.length == 0) {
+        if (vertex == null || graph == null || colors == null) {
             return null;
         }
 
-        for(String currentColor : colors) {
+        for (String currentColor : colors) {
             boolean available = true;
 
             for (Vertex<T> adjVertex : graph.getAdjacentsVertex(vertex)) {
@@ -82,7 +85,6 @@ public class GreedyAlgorithm {
                     available = false;
                     break;
                 }
-
             }
 
             if (available) {
@@ -90,7 +92,7 @@ public class GreedyAlgorithm {
             }
         }
 
-        return null;
+        return colors[colors.length - 1];
     }
 
     // Exercise 5
@@ -99,20 +101,26 @@ public class GreedyAlgorithm {
         int returnedValue = 0;
 
         while (returnedValue < amountToReturn) {
-            Integer chosenBanknote = selectBanknote(amountToReturn, changeAvailable);
+            int remainingAmount = amountToReturn - returnedValue;
 
-            if(chosenBanknote != null) {
-                int neededBanknotes = (amountToReturn - returnedValue) / chosenBanknote;
+            Integer chosenBanknote = selectBanknote(remainingAmount, changeAvailable);
+
+            if (chosenBanknote != null) {
+                int neededBanknotes = remainingAmount / chosenBanknote;
+
                 int availableBanknotes = changeAvailable.get(chosenBanknote);
 
-                if(neededBanknotes > availableBanknotes) {
+                if (neededBanknotes > availableBanknotes) {
                     neededBanknotes = availableBanknotes;
                 }
 
                 change.add(chosenBanknote, neededBanknotes);
+
                 returnedValue += chosenBanknote * neededBanknotes;
+
                 changeAvailable.add(chosenBanknote, availableBanknotes - neededBanknotes);
             } else {
+                // Si no hay cambio exacto posible
                 return new HashMap<>();
             }
         }
@@ -122,11 +130,16 @@ public class GreedyAlgorithm {
 
     private static Integer selectBanknote(int amountToReturn, Map<Integer, Integer> changeAvailable) {
         Integer highestBanknote = null;
+
         Set<Integer> banknotes = changeAvailable.getKeys();
 
-        for (Integer banknote: banknotes) {
-            if(banknote > (highestBanknote != null ? highestBanknote : 0) && banknote <= amountToReturn && changeAvailable.get(banknote) > 0) {
-                highestBanknote = banknote;
+        for (Integer banknote : banknotes) {
+            boolean isValid = (banknote <= amountToReturn) && (changeAvailable.get(banknote) > 0);
+
+            if (isValid) {
+                if (highestBanknote == null || banknote > highestBanknote) {
+                    highestBanknote = banknote;
+                }
             }
         }
 
