@@ -10,7 +10,7 @@ public class HashMap<K, V> implements Map<K, V> {
     private static final int CAPACITY = 50;
 
     private int size;
-    private List<Pair<K, V>>[] map;
+    private final List<Pair<K, V>>[] map;
 
     public HashMap() {
         this(CAPACITY);
@@ -21,9 +21,9 @@ public class HashMap<K, V> implements Map<K, V> {
         if (capacity <= 0) throw new IllegalArgumentException("The map size cannot be zero or lower");
 
         this.size = 0;
-        map = (List<Pair<K, V>>[]) new List[CAPACITY];
+        map = (List<Pair<K, V>>[]) new List[capacity];
 
-        for (int i = 0; i < CAPACITY; i++) {
+        for (int i = 0; i < capacity; i++) {
             map[i] = new LinkedList<>();
         }
     }

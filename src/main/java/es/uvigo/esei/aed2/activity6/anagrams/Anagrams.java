@@ -67,6 +67,10 @@ public class Anagrams {
         }
 
         // Convertir los valores del Map (Iterator<List<String>>) a Set<Set<String>>
+        return convertMapToSets(anagramGroups);
+    }
+
+    private static Set<Set<String>> convertMapToSets(Map<String, List<String>> anagramGroups) {
         Set<Set<String>> finalGroups = new HashSet<>();
         Iterator<List<String>> groupsIterator = anagramGroups.getValues();
 
@@ -131,16 +135,7 @@ public class Anagrams {
         }
 
         // Convertir los valores del Map (Iterator<List<String>>) a Set<Set<String>>
-        Set<Set<String>> finalGroups = new HashSet<>();
-        Iterator<List<String>> groupsIterator = anagramGroups.getValues();
-
-        while (groupsIterator.hasNext()) {
-            List<String> groupList = groupsIterator.next();
-            // Convertir la lista de anagramas en un conjunto
-            finalGroups.add(new HashSet<>(groupList));
-        }
-
-        return finalGroups;
+        return convertMapToSets(anagramGroups);
     }
 
 }
