@@ -53,21 +53,41 @@ public class BacktrackingAlgorithm {
 
     // Exercise 3
     public static boolean subgroups(int[] values, int[] solution, int result, int index) {
+        boolean objetivo = false;
 
-        return false;
+        while (index < values.length && !objetivo) {
+            int candidato = values[index];
+            if (candidato <= result) {
+                solution[index] = 1;
+
+                if (candidato == result) {
+                    objetivo = true;
+                } else {
+                    objetivo = subgroups(values, solution, result - candidato, index + 1);
+
+                    if (!objetivo) {
+                        solution[index] = 0;
+                    }
+                }
+
+            }
+            index++;
+        }
+
+        return objetivo;
     }
 
     // Exercise 4
     private static boolean goodPlace(int queen, int column, int[] board) {
-        // ¿Es amenaza colocar la reina queen en column, con las anteriores ?
+        // ¿Es amenaza colocar la reina 'queen' en column, con las anteriores?
 
         int previousQueen = 0;
         boolean isGood = true;
 
-        while (previousQueen < queen && isGood) {
-            if (board[previousQueen] == column) {
+        while (previousQueen < queen && isGood) { //Comparar solo con las reinas anteriores
+            if (board[previousQueen] == column) { //Coinciden columnas de las 2 reinas
                 isGood = false;
-            } else if (Math.abs(previousQueen - queen) == Math.abs(board[previousQueen] - column)) {
+            } else if (Math.abs(previousQueen - queen) == Math.abs(board[previousQueen] - column)) { //Diagonales
                 isGood = false;
             }
             previousQueen++;
@@ -77,12 +97,55 @@ public class BacktrackingAlgorithm {
     }
 
     public static boolean placeQueens(int queen, int[] board) {
+        boolean objetivo = false;
 
-        return false;
+        int columna = 0;
+
+        while (columna < board.length && !objetivo) {
+            if (goodPlace(queen, columna, board)) {
+                board[queen] = columna; //Anoto el nuevo paso
+
+                if (queen == board.length - 1) {
+                    objetivo = true;
+                } else {
+                    objetivo = placeQueens(queen + 1, board);
+
+                    if (!objetivo) {
+                        board[queen] = -1;
+                    }
+                }
+            }
+            columna++;
+        }
+
+        return objetivo;
     }
 
     // Exercise 5
     public static boolean solveSudoku(int[][] board) {
+        for (int row = 0; row < 9; row++) {
+            for (int col = 0; col < 9; col++) {
+                if (board[row][col] == 0) {
+                    boolean objetivo = false;
+
+                    for (int i = 1; i <= 9 && !objetivo; i++) {
+                        if (canInsert(board, row, col, i)) {
+                            board[row][col] = i;
+
+                            if (row == 8 && col == 8) {
+                                objetivo = true;
+                            } else {
+                                objetivo = solveSudoku(board);
+                                if (!objetivo) {
+                                    board[row][col] = 0;
+                                }
+                            }
+                        }
+                    }   //END_FOR_CANDIDATES
+                    return objetivo;
+                }   //END_IF
+            }   //END_FOR_COL
+        }   //END_FOR_ROW
 
         return true;
     }
@@ -115,8 +178,41 @@ public class BacktrackingAlgorithm {
 
     // Exercise 6
     public static boolean rehearseWords(char[][] maze, int positionX, int positionY, String word, int positionWord) {
+        boolean objetivo = false;
 
-        return false;
+        //Es cuadrada pero lo comprobamos igualmente
+        int n = maze.length;
+        int m = maze[0].length;
+
+        // Checkear que las posiciones sean correctas (para los movimientos que se intenten hacer)
+        if (positionX >= 0 && positionX < n && positionY >= 0 && positionY < m) {
+            if (maze[positionX][positionY] == word.charAt(positionWord)) {
+                char originalChar = maze[positionX][positionY];
+                maze[positionX][positionY] = ' '; // Marcar como visitado
+
+                // Si llegamos a la última posición posible...
+                if (positionX == n - 1 && positionY == m - 1) {
+                    objetivo = true;
+                } else {
+                    int nextWordPos = (positionWord + 1) % word.length();
+
+                    // Intentar moverse en las 4 direcciones
+                    if (rehearseWords(maze, positionX + 1, positionY, word, nextWordPos)    // DERECHA
+                        || rehearseWords(maze, positionX, positionY + 1, word, nextWordPos) // ABAJO
+                        || rehearseWords(maze, positionX - 1, positionY, word, nextWordPos) // IZQUIERDA
+                        || rehearseWords(maze, positionX, positionY - 1, word, nextWordPos))// ARRIBA
+                    {
+                        objetivo = true;
+                    }
+
+                    if (!objetivo) {
+                        maze[positionX][positionY] = originalChar; // Backtracking: restaurar valor
+                    }
+                }
+            }
+        }
+
+        return objetivo;
     }
 
     // Exercise 7
@@ -192,7 +288,7 @@ public class BacktrackingAlgorithm {
                 boolean isPossible = false;
                 piece1 = board[PUZZLE_DIMENSION - 2][0].getAvailableSides();
                 if (board[PUZZLE_DIMENSION - 2][0].getAvailableSides().charAt(0) == value.charAt(0)) {
-                    // A la ficha de arriba sólo le queda un lado disponible
+                    // A la ficha de arriba solo le queda un lado disponible
                     isPossible = true;
                     board[PUZZLE_DIMENSION - 2][0].setAvailableSides("");// quito el último lado
                     value = value.substring(1); // quito el primer lado
@@ -214,7 +310,7 @@ public class BacktrackingAlgorithm {
                 ) {
                     isPossible = true;
                     board[PUZZLE_DIMENSION - 2][PUZZLE_DIMENSION - 1].setAvailableSides("");// quito el último lado
-                    value = value.substring(0, value.length() - 1); // quito el ultimo lado
+                    value = value.substring(0, value.length() - 1); // quito el último lado
                 }
 
                 if (isPossible) {
@@ -224,7 +320,7 @@ public class BacktrackingAlgorithm {
                         // en ambas cards me queda un lado disponible
                         isPossible = true;
                         board[PUZZLE_DIMENSION - 1][PUZZLE_DIMENSION - 2].setAvailableSides("");// quito el último lado
-                        value = ""; // quito el ultimo lado
+                        value = ""; // quito el último lado
                     }
 
                     if (isPossible) {
@@ -271,7 +367,7 @@ public class BacktrackingAlgorithm {
                 if (board[0][j - 1].getAvailableSides().charAt(0) == value.charAt(value.length() - 1)) {
                     isPossible = true;
                     board[0][j - 1].setAvailableSides(board[0][j - 1].getAvailableSides().substring(1));// quito el primer lado
-                    value = value.substring(0, value.length() - 1); // quito el ultimo lado
+                    value = value.substring(0, value.length() - 1); // quito el último lado
                 }
                 if (isPossible) {
                     puzzleCard.setAvailableSides(value);
@@ -332,7 +428,7 @@ public class BacktrackingAlgorithm {
                 if (board[i - 1][j].getAvailableSides().charAt(0) == value.charAt(value.length() - 1)) {
                     isPossible = true;
                     board[i - 1][j].setAvailableSides("");// quito el primer lado
-                    value = value.substring(0, value.length() - 1); // quito el ultimo lado
+                    value = value.substring(0, value.length() - 1); // quito el último lado
                 }
 
                 if (isPossible) {
@@ -341,7 +437,7 @@ public class BacktrackingAlgorithm {
                     if (board[i][j - 1].getAvailableSides().charAt(0) == value.charAt(value.length() - 1)) {
                         isPossible = true;
                         board[i][j - 1].setAvailableSides(board[i][j - 1].getAvailableSides().substring(1));// quito el primer lado
-                        value = value.substring(0, value.length() - 1); // quito el ultimo lado
+                        value = value.substring(0, value.length() - 1); // quito el último lado
                     }
 
                     if (isPossible) {
@@ -380,14 +476,14 @@ public class BacktrackingAlgorithm {
                         isPossible = true;
                         board[i - 1][j].setAvailableSides("");
                         // girar la ficha correctamente y eliminar usada
-                        String aux = "";
+                        StringBuilder aux = new StringBuilder();
                         for (int x = 0; x < value.length(); x++) {
                             int pos = (p + x) % value.length();
                             if (pos != p) {
-                                aux += value.charAt(pos);
+                                aux.append(value.charAt(pos));
                             }
                         }
-                        value = aux;
+                        value = aux.toString();
                     }
                 }
 
@@ -397,7 +493,7 @@ public class BacktrackingAlgorithm {
                     if (board[i][j - 1].getAvailableSides().charAt(0) == value.charAt(value.length() - 1)) {
                         isPossible = true;
                         board[i][j - 1].setAvailableSides(board[i][j - 1].getAvailableSides().substring(1));// quito el primer lado
-                        value = value.substring(0, value.length() - 1); // quito el ultimo lado
+                        value = value.substring(0, value.length() - 1); // quito el último lado
                     }
 
                     if (isPossible) {

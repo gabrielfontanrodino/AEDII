@@ -142,7 +142,7 @@ public class DivideAndConquerAlgorithm {
             temp.add(aux[j++]);
         }
         for (i = start1; i <= end2; i++) { // Paso todos los elementos del Temporal al array
-            aux[i] = temp.remove(0);
+            aux[i] = temp.removeFirst();
         }
         return cont;
     }
