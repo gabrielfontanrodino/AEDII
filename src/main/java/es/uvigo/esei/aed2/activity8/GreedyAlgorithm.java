@@ -26,10 +26,7 @@ package es.uvigo.esei.aed2.activity8;
  * #L%
  */
 
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import es.uvigo.esei.aed2.activity6.mapofmap.MapOfMap;
 import es.uvigo.esei.aed2.graph.Edge;
@@ -305,39 +302,39 @@ public class GreedyAlgorithm {
     // Exercise 7 - Llenar mochila
     public static Map<String, Integer> fillRucksack(int maxVolume, Map<String, Integer> amounts, Map<String, Integer> volumes) {
         Map<String, Integer> result = new HashMap<>();
-        int usedVolume = 0;
+        int currentVolume = 0;
 
-        while (usedVolume < maxVolume) {
+        // C es el conjunto de candidatos
+        List<String> candidates = new ArrayList<>(volumes.getKeys());
+
+        // Consideramos "solución" cuando la mochila está llena o no cabe más nada (currentVolume < maxVolume)
+        while (!candidates.isEmpty() && currentVolume < maxVolume) {
+
+            // Seleccionar el objeto con mayor volumen unitario de los restantes
             String bestItem = null;
-            double bestRatio = 0;
+            int maxUnitVolume = -1;
 
-            // Buscar el objeto con mejor relación cantidad/volumen que quepa
-            for (String item : amounts.getKeys()) {
-                Integer amount = amounts.get(item);
-                Integer volume = volumes.get(item);
-                // Obtener la cantidad actual en la mochila
-                Integer currentItemCount = result.get(item);
-
-                if (currentItemCount == null) currentItemCount = 0;
-
-                // Si aún quedan unidades de este objeto y cabe en la mochila
-                if (currentItemCount < amount && usedVolume + volume <= maxVolume) {
-                    double ratio = (double) amount / volume;
-                    if (ratio > bestRatio) {
-                        bestRatio = ratio;
-                        bestItem = item;
-                    }
+            for (String item : candidates) {
+                int vol = volumes.get(item);
+                if (vol > maxUnitVolume) {
+                    maxUnitVolume = vol;
+                    bestItem = item;
                 }
             }
 
-            // Añadir el mejor objeto encontrado a la mochila
-            if (bestItem != null) {
-                Integer currentItemCount = result.get(bestItem);
-                if (currentItemCount == null) currentItemCount = 0;
-                result.add(bestItem, currentItemCount + 1);
-                usedVolume += volumes.get(bestItem);
-            } else {
-                break;
+            candidates.remove(bestItem);
+
+            // Verificamos si cabe al menos uno y calculamos la cantidad máxima posible
+            int itemVol = volumes.get(bestItem);
+            int availableAmount = amounts.get(bestItem);
+            int remainingSpace = maxVolume - currentVolume;
+
+            int maxFit = remainingSpace / itemVol;
+            int amountToTake = Math.min(availableAmount, maxFit);
+
+            if (amountToTake > 0) {
+                result.add(bestItem, amountToTake);
+                currentVolume += amountToTake * itemVol;
             }
         }
 
@@ -348,33 +345,27 @@ public class GreedyAlgorithm {
     public static Map<Vertex<String>, String> examSchedule(Graph<String, Integer> graph, String[] daysWeek) {
         Map<Vertex<String>, String> schedule = new HashMap<>();
 
-        // Para cada vértice (asignatura), asignar el primer día disponible
-        for (Vertex<String> subject : graph.getVertices()) {
-            String assignedDay = null;
+        for (Vertex<String> exam : graph.getVertices()) {
+            List<String> freeDays = new ArrayList<>(Arrays.asList(daysWeek));
 
-            // Buscar el primer día que no tenga conflictos
-            for (String day : daysWeek) {
-                boolean available = true;
-
-                // Verificar que ningún vecino tenga este día asignado
-                for (Vertex<String> adjacent : graph.getAdjacentsVertex(subject)) {
-                    String adjacentDay = schedule.get(adjacent);
-
-                    if (adjacentDay != null && adjacentDay.equals(day)) {
-                        available = false;
-                        break;
-                    }
-                }
-
-                if (available) {
-                    assignedDay = day;
-                    break;
+            for (Vertex<String> adjacent : graph.getAdjacentsVertex(exam)) {
+                if(schedule.getKeys().contains(adjacent)) {
+                    System.out.println("Removing day: " + schedule.get(adjacent) + " for exam " + exam.getValue() + " because of adjacent exam " + adjacent.getValue());
+                    freeDays.remove(schedule.get(adjacent));
                 }
             }
 
-            if (assignedDay != null) {
-                schedule.add(subject, assignedDay);
+            System.out.println("==============================");
+            for(String day : freeDays) {
+                System.out.println("Free day for exam " + exam.getValue() + ": " + day);
             }
+            System.out.println("==============================");
+
+            if(freeDays.isEmpty()) {
+                throw new RuntimeException("The full scheduling is impossible due to agenda overlapping");
+            }
+
+            schedule.add(exam, freeDays.getFirst());
         }
 
         return schedule;
@@ -385,7 +376,7 @@ public class GreedyAlgorithm {
         Set<String> selectedActivities = new HashSet<>();
 
         // Ordenar actividades por hora de finalización
-        List<Activity8> sortedActivities = new java.util.ArrayList<>(listActivities);
+        List<Activity8> sortedActivities = new ArrayList<>(listActivities);
         sortedActivities.sort(Comparator.comparingInt(Activity8::getEnd));
 
         int lastEndTime = -1;

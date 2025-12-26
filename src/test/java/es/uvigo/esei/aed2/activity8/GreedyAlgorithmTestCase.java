@@ -45,120 +45,132 @@ import es.uvigo.esei.aed2.map.Map;
 
 public class GreedyAlgorithmTestCase {
 
-  private final GreedyRepository dataGreedy = new GreedyRepository(AdjacencyList::new, AdjacencyList::new);
+    private final GreedyRepository dataGreedy = new GreedyRepository(AdjacencyList::new, AdjacencyList::new);
 
-  /**
-   * Test of traveller method, of class GreedyAlgorithm.
-   */
-  @Test
-  public void testTraveller() {
-    Graph<String, Integer> expectedGraph = this.dataGreedy.getGraphTraveller();
+    /**
+     * Test of traveller method, of class GreedyAlgorithm.
+     */
+    @Test
+    public void testTraveller() {
+        Graph<String, Integer> expectedGraph = this.dataGreedy.getGraphTraveller();
 
-    Graph<String, Integer> resultGraph = GreedyAlgorithm
-      .traveller(this.dataGreedy.getGraphTravellerPrim(), this.dataGreedy.getVertexONE());
+        Graph<String, Integer> resultGraph = GreedyAlgorithm
+            .traveller(this.dataGreedy.getGraphTravellerPrim(), this.dataGreedy.getVertexONE());
 
-    assertThat(resultGraph, is(equalToGraph(expectedGraph)));
-  }
+        assertThat(resultGraph, is(equalToGraph(expectedGraph)));
+    }
 
-  /**
-   * Test of prim method, of class GreedyAlgorithm.
-   */
-  @Test
-  public void testPrim() {
-    Graph<String, Integer> expectedGraph = this.dataGreedy.getGraphPrim();
+    /**
+     * Test of prim method, of class GreedyAlgorithm.
+     */
+    @Test
+    public void testPrim() {
+        Graph<String, Integer> expectedGraph = this.dataGreedy.getGraphPrim();
 
-    Graph<String, Integer> resultGraph = GreedyAlgorithm
-      .prim(this.dataGreedy.getGraphTravellerPrim(), this.dataGreedy.getVertexSEIX());
+        Graph<String, Integer> resultGraph = GreedyAlgorithm
+            .prim(this.dataGreedy.getGraphTravellerPrim(), this.dataGreedy.getVertexSEIX());
 
-    assertThat(resultGraph, is(equalToGraph(expectedGraph)));
-  }
+        assertThat(resultGraph, is(equalToGraph(expectedGraph)));
+    }
 
-  /**
-   * Test of Dijkstra method, of class GreedyAlgorithm.
-   */
-  @Test
-  public void testDijkstra() {
-    Map<Vertex<String>, Integer> expectedGraph = this.dataGreedy.getMapDijkstra();
+    /**
+     * Test of Dijkstra method, of class GreedyAlgorithm.
+     */
+    @Test
+    public void testDijkstra() {
+        Map<Vertex<String>, Integer> expectedGraph = this.dataGreedy.getMapDijkstra();
 
-    Map<Vertex<String>, Integer> resultGraph = GreedyAlgorithm
-      .dijkstra(this.dataGreedy.getGraphTravellerPrim(), this.dataGreedy.getVertexONE());
+        Map<Vertex<String>, Integer> resultGraph = GreedyAlgorithm
+            .dijkstra(this.dataGreedy.getGraphTravellerPrim(), this.dataGreedy.getVertexONE());
 
-    assertThat(resultGraph, is(equalToMap(expectedGraph)));
-  }
+        assertThat(resultGraph, is(equalToMap(expectedGraph)));
+    }
 
-  /**
-   * Test of colourMap method, of class GreedyAlgorithm.
-   */
-  @Test
-  public void testColourMap() {
-    Map<Vertex<String>, String> expectedGraph = this.dataGreedy.getMapColour();
+    /**
+     * Test of colourMap method, of class GreedyAlgorithm.
+     */
+    @Test
+    public void testColourMap() {
+        Map<Vertex<String>, String> expectedGraph = this.dataGreedy.getMapColour();
 
-    Map<Vertex<String>, String> resultGraph = GreedyAlgorithm
-      .colorMap(this.dataGreedy.getGraphColour(), this.dataGreedy.getColours());
+        Map<Vertex<String>, String> resultGraph = GreedyAlgorithm
+            .colorMap(this.dataGreedy.getGraphColour(), this.dataGreedy.getColours());
 
-    assertThat(resultGraph, is(equalToMap(expectedGraph)));
-  }
+        assertThat(resultGraph, is(equalToMap(expectedGraph)));
+    }
 
-  /**
-   * Test of giveChange method, of class GreedyAlgorithm.
-   */
-  @Test
-  public void testGiveChange() {
-    Map<Integer, Integer> expectedMap = this.dataGreedy.getMapChangeResult();
+    /**
+     * Test of giveChange method, of class GreedyAlgorithm.
+     */
+    @Test
+    public void testGiveChange() {
+        Map<Integer, Integer> expectedMap = this.dataGreedy.getMapChangeResult();
 
-    Map<Integer, Integer> resultMap = GreedyAlgorithm.giveChange(1200, this.dataGreedy.getMapChange());
+        Map<Integer, Integer> resultMap = GreedyAlgorithm.giveChange(1200, this.dataGreedy.getMapChange());
 
-    assertThat(resultMap, is(equalToMap(expectedMap)));
-  }
+        assertThat(resultMap, is(equalToMap(expectedMap)));
+    }
 
-  /**
-   * Test of burnCD method, of class GreedyAlgorithm.
-   */
-  @Test
-  public void testBurnCD() {
-    Set<String> expectedProgram = this.dataGreedy.getProgramResult();
+    /**
+     * Test of burnCD method, of class GreedyAlgorithm.
+     */
+    @Test
+    public void testBurnCD() {
+        Set<String> expectedProgram = this.dataGreedy.getProgramResult();
 
-    Set<String> resultProgram = GreedyAlgorithm.burnCD(21, this.dataGreedy.getMapCD());
+        Set<String> resultProgram = GreedyAlgorithm.burnCD(21, this.dataGreedy.getMapCD());
 
-    assertThat(resultProgram, is(equalTo(expectedProgram)));
-  }
+        assertThat(resultProgram, is(equalTo(expectedProgram)));
+    }
 
-  /**
-   * Test of fillRucksack method, of class GreedyAlgorithm.
-   */
-  @Test
-  public void testFillRucksack() {
-    Map<String, Integer> expectedMap = this.dataGreedy.getMapRucksackResult();
+    /**
+     * Test of fillRucksack method, of class GreedyAlgorithm.
+     */
+    @Test
+    public void testFillRucksack() {
+        Map<String, Integer> expectedMap = this.dataGreedy.getMapRucksackResult();
 
-    Map<String, Integer> resultMap = GreedyAlgorithm
-      .fillRucksack(55, this.dataGreedy.getMapRucksackAmounts(), this.dataGreedy.getMapRucksackVolumes());
+        Map<String, Integer> resultMap = GreedyAlgorithm
+            .fillRucksack(55, this.dataGreedy.getMapRucksackAmounts(), this.dataGreedy.getMapRucksackVolumes());
 
-    assertThat(resultMap, is(equalToMap(expectedMap)));
-  }
+        assertThat(resultMap, is(equalToMap(expectedMap)));
+    }
 
-  /**
-   * Test of examSchedule method, of class GreedyAlgorithm.
-   */
-  @Test
-  public void testExamSchedule() {
-    Map<Vertex<String>, String> expectedMap = this.dataGreedy.getMapSchedule();
+    /**
+     * Test of examSchedule method, of class GreedyAlgorithm.
+     */
+    @Test
+    public void testExamSchedule() {
+        Map<Vertex<String>, String> expectedMap = this.dataGreedy.getMapSchedule();
 
-    Map<Vertex<String>, String> resultMap = GreedyAlgorithm
-      .examSchedule(this.dataGreedy.getGraphScheduler(), this.dataGreedy.getDaysWeek());
+        Map<Vertex<String>, String> resultMap = GreedyAlgorithm
+            .examSchedule(this.dataGreedy.getGraphScheduler(), this.dataGreedy.getDaysWeek());
 
-    assertThat(resultMap, is(equalToMap(expectedMap)));
-  }
+        //Print results
 
-  /**
-   * Test of planificadorActivityes method, of class GreedyAlgorithm.
-   */
-  @Test
-  public void testPlannerActivityes() {
-    Set<String> expectedActivities = this.dataGreedy.getActivitiesResult();
+        System.out.println("Expected Map:");
+        for (Vertex<String> entry : expectedMap.getKeys()) {
+            System.out.println("Vertex: " + entry.getValue() + ", Day: " + expectedMap.get(entry));
+        }
 
-    Set<String> resultActivities = GreedyAlgorithm.plannerActivities(dataGreedy.getListActivities());
+        System.out.println("Result Map:");
+        for (Vertex<String> entry : resultMap.getKeys()) {
+            System.out.println("Vertex: " + entry.getValue() + ", Day: " + resultMap.get(entry));
+        }
 
-    assertThat(resultActivities, is(equalTo(expectedActivities)));
-  }
+        assertThat(resultMap, is(equalToMap(expectedMap)));
+    }
+
+    /**
+     * Test of planificadorActivityes method, of class GreedyAlgorithm.
+     */
+    @Test
+    public void testPlannerActivityes() {
+        Set<String> expectedActivities = this.dataGreedy.getActivitiesResult();
+
+        Set<String> resultActivities = GreedyAlgorithm.plannerActivities(dataGreedy.getListActivities());
+
+        assertThat(resultActivities, is(equalTo(expectedActivities)));
+    }
 
 }
