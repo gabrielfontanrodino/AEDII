@@ -27,9 +27,9 @@ package es.uvigo.esei.aed2.activity9;
  * #L%
  */
 
-import es.uvigo.esei.aed2.map.HashMap;
 import es.uvigo.esei.aed2.map.Map;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -39,40 +39,53 @@ public class BacktrackingAlgorithm {
     public static final int PUZZLE_DIMENSION = 4; // Puzzle cuadrado
 
     // Exercise 1
-    public static boolean giveChange(
-        int amountReturned, Map<Integer, Integer> changeAvailable, Map<Integer, Integer> solution
-    ) {
+    public static boolean giveChange(int amountReturned, Map<Integer, Integer> changeAvailable, Map<Integer, Integer> solution) {
         boolean objetivo = false;
 
-        while (!objetivo) {
+        List<Integer> candidates = new ArrayList<>(changeAvailable.getKeys());
+        int index = 0;
 
-            for (Integer billete : changeAvailable.getKeys()) {
-                //Si no quedan billetes de un tamaño, probamos con otro
-                if (changeAvailable.get(billete) == 0) continue;
+        while (index < candidates.size() && !objetivo) {
+            // Obtener un billete de la lista
+            int billete = candidates.get(index);
 
-                changeAvailable.add(billete, changeAvailable.get(billete) - 1);
+            //Si no quedan billetes de un tamaño, probamos con otro
+            if (changeAvailable.get(billete) == 0) {
+                index++;
+                continue;
+            }
 
-                //Si la resta es exacta
-                if (amountReturned - billete == 0) {
-                    objetivo = true;
-                } else {
-                    if (!objetivo && amountReturned >= billete) {
-                        objetivo = giveChange(
-                            amountReturned - billete,
-                            changeAvailable,
-                            solution
-                        );
+            //Si la resta es exacta
+            if (amountReturned - billete == 0) {
+                objetivo = true;
+            } else {
+                if (amountReturned >= billete) {
+                    // Restamos un billete de la cantidad a probar a la lista de billetes disponibles (la caja)
+                    changeAvailable.add(billete, changeAvailable.get(billete) - 1);
 
-                        if (objetivo) {
-                            if (solution.get(billete) == null) {
-                                solution.add(billete, 1);
-                            } else {
-                                solution.add(billete, solution.get(billete) + 1);
-                            }
-                        } else {
-                            changeAvailable.add(billete, changeAvailable.get(billete) + 1);
-                        }
+                    // Usamos el mismo algoritmo para comprobar las opciones más pequeñas
+                    objetivo = giveChange(amountReturned - billete, changeAvailable, solution);
+
+                    // Si no encontramos una solución posible
+                    if (!objetivo) {
+                        // Deshacemos el cambio
+                        changeAvailable.add(billete, changeAvailable.get(billete) + 1);
+                        // Probamos el siguiente billete (de la lista)
+                        index++;
                     }
+                } else {
+                    // Como la cantidad a buscar es menor que el tamaño del billete,
+                    // probamos con otro billete de distinto valor.
+                    index++;
+                }
+            }
+
+            if (objetivo) {
+                // Añadimos un billete al mapa de solución ya que encontramos un caso favorable
+                if (solution.get(billete) == null) {
+                    solution.add(billete, 1);
+                } else {
+                    solution.add(billete, solution.get(billete) + 1);
                 }
             }
         }
@@ -82,8 +95,36 @@ public class BacktrackingAlgorithm {
 
     // Exercise 2
     public static boolean fillUpFlashDrive(int capacityCD, Map<String, Integer> espacePrograms, Set<String> flashDrive) {
+        boolean objetivo = false;
+        List<String> candidates = new ArrayList<>(espacePrograms.getKeys());
 
-        return false;
+        int currentCandidate = 0;
+
+        while (currentCandidate < candidates.size() && !objetivo) {
+            String program = candidates.get(currentCandidate);
+            int programSize = espacePrograms.get(program);
+
+            // Si se puede añadir el programa
+            if (capacityCD >= programSize) {
+                flashDrive.add(program);
+                espacePrograms.remove(program);
+
+                if (capacityCD - programSize == 0) {
+                    objetivo = true;
+                } else {
+                    objetivo = fillUpFlashDrive(capacityCD - programSize, espacePrograms, flashDrive);
+
+                    if (!objetivo) {
+                        flashDrive.remove(program);
+                        espacePrograms.add(program, programSize);
+                    }
+                }
+            }
+
+            currentCandidate++;
+        }
+
+        return objetivo;
     }
 
     // Exercise 3
@@ -113,24 +154,6 @@ public class BacktrackingAlgorithm {
     }
 
     // Exercise 4
-    private static boolean goodPlace(int queen, int column, int[] board) {
-        // ¿Es amenaza colocar la reina 'queen' en column, con las anteriores?
-
-        int previousQueen = 0;
-        boolean isGood = true;
-
-        while (previousQueen < queen && isGood) { //Comparar solo con las reinas anteriores
-            if (board[previousQueen] == column) { //Coinciden columnas de las 2 reinas
-                isGood = false;
-            } else if (Math.abs(previousQueen - queen) == Math.abs(board[previousQueen] - column)) { //Diagonales
-                isGood = false;
-            }
-            previousQueen++;
-        }
-
-        return isGood;
-    }
-
     public static boolean placeQueens(int queen, int[] board) {
         boolean objetivo = false;
 
@@ -154,6 +177,24 @@ public class BacktrackingAlgorithm {
         }
 
         return objetivo;
+    }
+
+    private static boolean goodPlace(int queen, int column, int[] board) {
+        // ¿Es amenaza colocar la reina 'queen' en column, con las anteriores?
+
+        int previousQueen = 0;
+        boolean isGood = true;
+
+        while (previousQueen < queen && isGood) { //Comparar solo con las reinas anteriores
+            if (board[previousQueen] == column) { //Coinciden columnas de las 2 reinas
+                isGood = false;
+            } else if (Math.abs(previousQueen - queen) == Math.abs(board[previousQueen] - column)) { //Diagonales
+                isGood = false;
+            }
+            previousQueen++;
+        }
+
+        return isGood;
     }
 
     // Exercise 5
@@ -265,10 +306,7 @@ public class BacktrackingAlgorithm {
                 PuzzleCard k = board[i][j];
                 if (k != null) {
                     k.setAvailableSides(k.getNumPuzzleCard());
-                    if (
-                        canInsertCorner(board2, i, j, k) || canInsertEdge(board2, i, j, k)
-                            || isPossibleInsertCentre(board2, i, j, k)
-                    ) {
+                    if (canInsertCorner(board2, i, j, k) || canInsertEdge(board2, i, j, k) || isPossibleInsertCentre(board2, i, j, k)) {
                         board2[i][j] = k;
                     }
                 }
@@ -307,8 +345,7 @@ public class BacktrackingAlgorithm {
                 piece1 = board[0][PUZZLE_DIMENSION - 2].getAvailableSides();
                 if (board[0][PUZZLE_DIMENSION - 2].getAvailableSides().charAt(0) == value.charAt(value.length() - 1)) {
                     isPossible = true;
-                    board[0][PUZZLE_DIMENSION - 2]
-                        .setAvailableSides(board[0][PUZZLE_DIMENSION - 2].getAvailableSides().substring(1)); // quito el primer lado
+                    board[0][PUZZLE_DIMENSION - 2].setAvailableSides(board[0][PUZZLE_DIMENSION - 2].getAvailableSides().substring(1)); // quito el primer lado
                     value = value.substring(0, value.length() - 1); // quito el último lado
                 }
 
@@ -339,10 +376,7 @@ public class BacktrackingAlgorithm {
             } else if (i == PUZZLE_DIMENSION - 1 && j == PUZZLE_DIMENSION - 1) {
                 boolean isPossible = false;
                 piece2 = board[PUZZLE_DIMENSION - 2][PUZZLE_DIMENSION - 1].getAvailableSides();
-                if (
-                    board[PUZZLE_DIMENSION - 2][PUZZLE_DIMENSION - 1].getAvailableSides().charAt(0) == value
-                        .charAt(value.length() - 1)
-                ) {
+                if (board[PUZZLE_DIMENSION - 2][PUZZLE_DIMENSION - 1].getAvailableSides().charAt(0) == value.charAt(value.length() - 1)) {
                     isPossible = true;
                     board[PUZZLE_DIMENSION - 2][PUZZLE_DIMENSION - 1].setAvailableSides("");// quito el último lado
                     value = value.substring(0, value.length() - 1); // quito el último lado
