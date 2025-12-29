@@ -27,6 +27,7 @@ package es.uvigo.esei.aed2.activity9;
  * #L%
  */
 
+import es.uvigo.esei.aed2.map.HashMap;
 import es.uvigo.esei.aed2.map.Map;
 
 import java.util.List;
@@ -41,8 +42,42 @@ public class BacktrackingAlgorithm {
     public static boolean giveChange(
         int amountReturned, Map<Integer, Integer> changeAvailable, Map<Integer, Integer> solution
     ) {
+        boolean objetivo = false;
 
-        return false;
+        while (!objetivo) {
+
+            for (Integer billete : changeAvailable.getKeys()) {
+                //Si no quedan billetes de un tamaño, probamos con otro
+                if (changeAvailable.get(billete) == 0) continue;
+
+                changeAvailable.add(billete, changeAvailable.get(billete) - 1);
+
+                //Si la resta es exacta
+                if (amountReturned - billete == 0) {
+                    objetivo = true;
+                } else {
+                    if (!objetivo && amountReturned >= billete) {
+                        objetivo = giveChange(
+                            amountReturned - billete,
+                            changeAvailable,
+                            solution
+                        );
+
+                        if (objetivo) {
+                            if (solution.get(billete) == null) {
+                                solution.add(billete, 1);
+                            } else {
+                                solution.add(billete, solution.get(billete) + 1);
+                            }
+                        } else {
+                            changeAvailable.add(billete, changeAvailable.get(billete) + 1);
+                        }
+                    }
+                }
+            }
+        }
+
+        return objetivo;
     }
 
     // Exercise 2
