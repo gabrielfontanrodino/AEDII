@@ -30,6 +30,7 @@ package es.uvigo.esei.aed2.activity9;
 import es.uvigo.esei.aed2.map.Map;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -42,24 +43,18 @@ public class BacktrackingAlgorithm {
     public static boolean giveChange(int amountReturned, Map<Integer, Integer> changeAvailable, Map<Integer, Integer> solution) {
         boolean objetivo = false;
 
-        List<Integer> candidates = new ArrayList<>(changeAvailable.getKeys());
-        int index = 0;
+        Iterator<Integer> candidates = changeAvailable.getKeys().iterator();
 
-        while (index < candidates.size() && !objetivo) {
+        while (candidates.hasNext() && !objetivo) {
             // Obtener un billete de la lista
-            int billete = candidates.get(index);
+            int billete = candidates.next();
 
             //Si no quedan billetes de un tamaño, probamos con otro
-            if (changeAvailable.get(billete) == 0) {
-                index++;
-                continue;
-            }
-
-            //Si la resta es exacta
-            if (amountReturned - billete == 0) {
-                objetivo = true;
-            } else {
-                if (amountReturned >= billete) {
+            if (changeAvailable.get(billete) > 0 && amountReturned >= billete) {
+                //Si la resta es exacta
+                if (amountReturned - billete == 0) {
+                    objetivo = true;
+                } else {
                     // Restamos un billete de la cantidad a probar a la lista de billetes disponibles (la caja)
                     changeAvailable.add(billete, changeAvailable.get(billete) - 1);
 
@@ -71,21 +66,19 @@ public class BacktrackingAlgorithm {
                         // Deshacemos el cambio
                         changeAvailable.add(billete, changeAvailable.get(billete) + 1);
                         // Probamos el siguiente billete (de la lista)
-                        index++;
                     }
-                } else {
                     // Como la cantidad a buscar es menor que el tamaño del billete,
                     // probamos con otro billete de distinto valor.
-                    index++;
+                    // (Volvemos al inicio)
                 }
-            }
 
-            if (objetivo) {
-                // Añadimos un billete al mapa de solución ya que encontramos un caso favorable
-                if (solution.get(billete) == null) {
-                    solution.add(billete, 1);
-                } else {
-                    solution.add(billete, solution.get(billete) + 1);
+                if (objetivo) {
+                    // Añadimos un billete al mapa de solución ya que encontramos un caso favorable
+                    if (solution.get(billete) == null) {
+                        solution.add(billete, 1);
+                    } else {
+                        solution.add(billete, solution.get(billete) + 1);
+                    }
                 }
             }
         }
@@ -95,33 +88,44 @@ public class BacktrackingAlgorithm {
 
     // Exercise 2
     public static boolean fillUpFlashDrive(int capacityCD, Map<String, Integer> espacePrograms, Set<String> flashDrive) {
+        // Convertimos las llaves a una lista para tener un orden fijo y usar un índice
+        List<String> candidatos = new ArrayList<>(espacePrograms.getKeys());
+
+        // Llamamos a la función auxiliar empezando en el índice 0
+        return fillUpFlashDriveAux(capacityCD, espacePrograms, candidatos, flashDrive, 0);
+    }
+
+
+    private static boolean fillUpFlashDriveAux(int capacity, Map<String, Integer> programs, List<String> candidates, Set<String> drive, int programIndex) {
         boolean objetivo = false;
-        List<String> candidates = new ArrayList<>(espacePrograms.getKeys());
 
-        int currentCandidate = 0;
+        // Caso base: Si la capacidad llegó a 0, completamos el ejercicio
+        if (capacity == 0) {
+            objetivo = true;
+        } else {
+            while (programIndex < candidates.size() && !objetivo) {
+                String prog = candidates.get(programIndex);
+                int size = programs.get(prog);
 
-        while (currentCandidate < candidates.size() && !objetivo) {
-            String program = candidates.get(currentCandidate);
-            int programSize = espacePrograms.get(program);
+                // Comprobamos si el programa cabe en el espacio restante
+                if (capacity >= size) {
+                    // 1. MARCAR: Añadimos el programa
+                    drive.add(prog);
 
-            // Si se puede añadir el programa
-            if (capacityCD >= programSize) {
-                flashDrive.add(program);
-                espacePrograms.remove(program);
+                    // 2. EXPLORAR: Llamada recursiva pasando el siguiente índice (i + 1)
+                    objetivo = fillUpFlashDriveAux(capacity - size, programs, candidates, drive, programIndex + 1);
 
-                if (capacityCD - programSize == 0) {
-                    objetivo = true;
-                } else {
-                    objetivo = fillUpFlashDrive(capacityCD - programSize, espacePrograms, flashDrive);
-
+                    // 3. DESHACER (Backtracking): Si este camino no funcionó, deshacemos los cambios
                     if (!objetivo) {
-                        flashDrive.remove(program);
-                        espacePrograms.add(program, programSize);
+                        drive.remove(prog);
                     }
                 }
-            }
 
-            currentCandidate++;
+                // Si no hemos encontrado el objetivo, pasamos al siguiente candidato
+                if (!objetivo) {
+                    programIndex++;
+                }
+            }
         }
 
         return objetivo;
