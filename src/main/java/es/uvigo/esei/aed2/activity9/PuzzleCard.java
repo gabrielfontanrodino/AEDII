@@ -28,6 +28,7 @@ package es.uvigo.esei.aed2.activity9;
  */
 public class PuzzleCard {
 
+    // INMUTABLE
     private final String numPuzzleCard;
     private String availableSides;
 

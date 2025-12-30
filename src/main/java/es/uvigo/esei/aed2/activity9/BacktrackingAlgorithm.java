@@ -296,8 +296,79 @@ public class BacktrackingAlgorithm {
     }
 
     // Exercise 7
+    /*
+     * Respuestas a las cuestiones de diseño:
+     * a) Representación: Se usa PuzzleCard. 'availableSides' gestiona la orientación y lados libres tras colocarla.
+     * b) Esquinas: Se detectan por índices (0,0), (0,SIZE), etc. Las comprobaciones varían según qué vecinos (izquierda/arriba) existan ya.
+     * c) Bordes: Se detectan si i o j son 0/SIZE. Se comprueba que tengan un '0' y encajen con los vecinos colocados (izq y/o arriba).
+     * d) Centro: No pueden tener '0'. Deben encajar con el vecino de la izquierda y el de arriba.
+     * e) Backtracking: Al retirar una ficha, se debe resetear su estado y restaurar los lados disponibles de los vecinos que se habían conectado a ella.
+     */
     public static boolean solvePuzzle(PuzzleCard[][] board, List<PuzzleCard> cards) {
+        for (int row = 0; row < PUZZLE_DIMENSION; row++) {
+            for (int column = 0; column < PUZZLE_DIMENSION; column++) {
+                //Si no hay carta colocada se prueba a colocar UNA
+                if (board[row][column] == null) {
+                    /*
+                     * Una vez encontrada una casilla vacía (i, j),
+                     * itera sobre todas las cartas disponibles en la lista cards.
+                     * */
 
+                    boolean objetivo = false;
+
+                    //Probamos con todas las cartas
+                    for (int k = 0; k < cards.size() && !objetivo; k++) {
+                        PuzzleCard card = cards.get(k);
+                        boolean fits = false;
+
+                        // Resetear estado de la ficha antes de probar
+                        card.setAvailableSides(card.getNumPuzzleCard());
+
+                        // Si está en una esquina...
+                        if ((row == 0 || row == PUZZLE_DIMENSION - 1) && (column == 0 || column == PUZZLE_DIMENSION - 1)) {
+                            fits = canInsertCorner(board, row, column, card);
+                            // Si está en el borde del puzzle (esto implicaría que también podría ser un borde,
+                            // pero como ya lo comprobamos antes, nos libramos de más lógica
+                        } else if ((row == 0 || row == PUZZLE_DIMENSION - 1) || (column == 0 || column == PUZZLE_DIMENSION - 1)) {
+                            fits = canInsertEdge(board, row, column, card);
+                            // "Centre" se refiere a cualquier otra posición que no sea esquina o borde
+                        } else {
+                            fits = isPossibleInsertCentre(board, row, column, card);
+                        }
+
+                        if (fits) {
+                            // Colocamos ficha
+                            board[row][column] = card;
+                            // Eliminamos de la lista de cartas para usar
+                            cards.remove(k);
+
+                            // Delegamos el resto de pruebas a la recursividad
+                            objetivo = solvePuzzle(board, cards);
+
+                            // Si no es válida
+                            if (!objetivo) {
+                                // Liberamos el espacio del tablero
+                                board[row][column] = null;
+                                // Reañadimos la carta a la lista
+                                cards.add(k, card);
+                                // Reseteamos el estado de la ficha, ya que
+                                // las operaciones realizadas en las funciones
+                                // "canInsert" modifican el estado
+                                card.setAvailableSides(card.getNumPuzzleCard());
+                                // Reparamos el estado de los vecinos
+                                changeSidesPuzzleCards(board);
+                            }
+                        }
+                    }
+                    // Vamos bien por el camino o no
+                    return objetivo;
+                }
+            }
+        }
+        /* Si no hay huecos libres (que significa que nos saltamos
+         * todas las pruebas de cartas porque no usamos el return del
+         * medio), el puzzle está resuelto
+         */
         return true;
     }
 
@@ -318,13 +389,12 @@ public class BacktrackingAlgorithm {
         }
 
         board = board2;
-
     }
 
     /*
-     * Comprueba si es posible colocar la ficha en una de las esquinas del tablero. Para que devuelva true la ficha debe
+     * Comprueba si es posible colocar la ficha en una de las esquinas del tablero. Para que devuelva true, la ficha debe
      * contener la subcadena “00”, las posiciones i-j deben ser esquina, y la ficha encaja con las fichas con las que
-     * linda que ya están colocadas en eltablero. En otro caso devolverá falso.
+     * linda que ya están colocadas en el tablero. En otro caso devolverá falso.
      */
     private static boolean canInsertCorner(PuzzleCard[][] board, int i, int j, PuzzleCard value1) {
         if (value1.getNumPuzzleCard().contains("00")) {
@@ -588,7 +658,79 @@ public class BacktrackingAlgorithm {
 
     // Exercise 8
     public static boolean exitMaze(char[][] maze, int positionX, int positionY) {
-        return false;
+        boolean objetivo = false;
+
+        if ((positionX >= 0 && positionX < maze.length) && (positionY >= 0 && positionY < maze[0].length)) {
+            char candidato = maze[positionX][positionY];
+
+            // Miramos si es alguna de las excepciones
+            if (candidato == 'X' || candidato == 'C' || candidato == 'I') {
+                return false;
+            }
+
+            // Caso base
+            if (positionX == maze.length - 1 && positionY == maze[0].length - 1) {
+                maze[positionX][positionY] = 'C';
+                return true;
+            }
+
+            // CASO TELEPORT
+            if (candidato == 'T') {
+                // Marcamos la T actual como camino andado
+                maze[positionX][positionY] = 'C';
+
+                for (int i = 0; i < maze.length && !objetivo; i++) {
+                    for (int j = 0; j < maze[i].length && !objetivo; j++) {
+                        char place = maze[i][j];
+
+                        // Buscamos la OTRA T (la actual ya es 'C', así que no la encontrará a sí misma)
+                        if (place == 'T') {
+                            int newX = i;
+                            int newY = j;
+
+                            maze[newX][newY] = 'C'; // Marcamos destino
+
+                            // Extra: ¿Y si el destino del teletransporte es la meta?
+                            if (newX == maze.length - 1 && newY == maze[0].length - 1) {
+                                return true;
+                            }
+
+                            // Exploramos desde la nueva T. Prioridad: Abajo, Derecha
+                            objetivo = (
+                                exitMaze(maze, newX + 1, newY)      // Abajo
+                                    || exitMaze(maze, newX, newY + 1)   // Derecha
+                                    || exitMaze(maze, newX - 1, newY)   // Arriba
+                                    || exitMaze(maze, newX, newY - 1)   // Izquierda
+                            );
+
+                            if (!objetivo) {
+                                maze[newX][newY] = 'I';
+                                maze[positionX][positionY] = 'I';
+                            }
+                        }
+                    }
+                }
+            }
+
+            // No buscado
+            if (candidato == ' ') {
+                maze[positionX][positionY] = 'C';
+
+                // Intentamos ir hacia la meta en el orden indicado si no falla el test.
+                // Esto evita explorar y marcar como 'I' zonas innecesarias.
+                objetivo = (
+                    exitMaze(maze, positionX + 1, positionY)      // Abajo
+                        || exitMaze(maze, positionX, positionY + 1)      // Derecha
+                        || exitMaze(maze, positionX - 1, positionY)      // Arriba
+                        || exitMaze(maze, positionX, positionY - 1)      // Izquierda
+                );
+
+                if (!objetivo) {
+                    maze[positionX][positionY] = 'I';
+                }
+            }
+        }
+        return objetivo;
     }
 
 }
