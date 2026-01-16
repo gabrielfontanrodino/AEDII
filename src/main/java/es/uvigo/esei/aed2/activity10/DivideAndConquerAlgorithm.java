@@ -32,7 +32,30 @@ import java.util.ArrayList;
 public class DivideAndConquerAlgorithm {
     // Exercise 1
     public static int quickSelection(int[] array, int k_minor, int i, int j) {
-        return -1;
+        // "elemento mayor de los dos primeros elementos DISTINTOS encontrados"
+        int pivotIndex = searchPivotPosition(i, j, array);
+
+        if (pivotIndex == -1) {
+            return array[0];
+        } else {
+            int pivot = array[pivotIndex];
+            // Pongo el pivote al final
+            exchange(pivotIndex, j, array);
+            // Particiono el array en menores y mayores o iguales que el pivote
+            int k = partition(i, j, pivot, array);
+            int numElementsLessThanPivot = k - i;
+            // Ahora decido en qué parte seguir buscando el k-ésimo menor
+            if (k_minor < numElementsLessThanPivot) {
+                // Busco en la parte de los menores
+                return quickSelection(array, k_minor, i, k - 1);
+            } else if (k_minor > numElementsLessThanPivot) {
+                // Busco en la parte de los mayores
+                return quickSelection(array, k_minor - numElementsLessThanPivot, k, j);
+            } else {
+                // He encontrado el k-ésimo menor
+                return array[k - 1];
+            }
+        }
     }
 
     /*
@@ -97,7 +120,13 @@ public class DivideAndConquerAlgorithm {
     private static void moveHanoiDiscsRecursive(
         int numDiscs, String startPost, String auxiliaryPost, String endPost, StringBuilder movements
     ) {
-
+        if (numDiscs == 1) {
+            keepMoving(1, startPost, endPost, movements);
+        } else {
+            moveHanoiDiscsRecursive(numDiscs - 1, startPost, endPost, auxiliaryPost, movements);
+            keepMoving(numDiscs, startPost, endPost, movements);
+            moveHanoiDiscsRecursive(numDiscs - 1, auxiliaryPost, startPost, endPost, movements);
+        }
     }
 
     private static void keepMoving(int n, String postI, String postF, StringBuilder movements) {
@@ -106,17 +135,83 @@ public class DivideAndConquerAlgorithm {
 
     // Exercise 3
     public static int numberExists(int[] array, int start, int end) {
-        return -1;
+        if (start > end) {
+            return -1;
+        }
+
+        int mid = (start + end) / 2;
+
+        if (array[mid] == mid) {
+            return mid;
+        } else if (array[mid] > mid) {
+            // El valor encontrado en el array es mayor al índice del medio,
+            // por lo que no encontraremos valores a la derecha que cuadren.
+            // Conclusión: tenemos que buscar a la izquierda.
+            return numberExists(array, start, mid - 1);
+        } else {
+            // Queda a la derecha por descarte
+            return numberExists(array, mid + 1, end);
+        }
     }
 
     // Exercise 4
     public static int searchPositionK(int[] v, int start, int end) {
-        return -1;
+        // La idea es ir analizando el valor de índice a índice
+        // Cuando veamos que pasamos de un número cualquiera a uno
+        // menor, marcamos ese como el índice "k", que es donde cambia
+        // la curva
+
+        if (start >= end) {
+            return -1; // No se encuentra una posición K válida
+        }
+
+        int mid = (start + end) / 2;
+
+        System.out.println("Mid: " + mid);
+
+        // Verificamos si mid es la posición K
+        if (
+            (mid > 0 && mid < v.length - 1)
+                && (v[mid - 1] > v[mid])
+                && (v[mid] < v[mid + 1])
+        ) {
+            return mid;
+        }
+
+        // Si la curva sigue descendiendo, buscamos a la derecha y
+        // ya no buscamos en la derecha
+        if (mid > 0 && v[mid - 1] > v[mid]) {
+            System.out.println("Buscamos a la derecha");
+            return searchPositionK(v, mid - 1, end);
+        }
+
+        // Si la curva sigue ascendiendo, buscamos a la izquierda y
+        // ya no buscamos en la derecha
+        if (mid < v.length - 1 && v[mid] < v[mid + 1]) {
+            System.out.println("Buscamos a la izquierda");
+            return searchPositionK(v, start, mid + 1);
+        }
+
+        return -1; // No se encuentra una posición K válida
+
     }
 
     // Exercise 5
     public static int inversions(int[] array, int start, int end) {
-        return 0;
+        // Ambos tienen la misma cantidad de productos valorados
+        // La valoración no puede contener valores repetidos y es ascendente
+        if(start >= end) {
+            return 0;
+        }
+
+        int mid = (start + end) / 2;
+        int inversions = 0;
+
+        inversions += inversions(array, start, mid);
+        inversions += inversions(array, mid + 1, end);
+        inversions += mergeCount(array, start, mid, mid + 1, end);
+
+        return inversions;
     }
 
     // Mezcla ordenanado los elmentos de las dos mitades y devuelve el número de inversiones entre ellas
