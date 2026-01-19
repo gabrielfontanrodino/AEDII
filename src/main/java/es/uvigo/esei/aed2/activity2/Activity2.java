@@ -98,7 +98,7 @@ public class Activity2 {
             return new LinkedBinaryTree<>();
         }
 
-        String root = preorder.substring(0, 1); // El primer elemento del recorrido en preorden es la raíz
+        String root = String.valueOf(preorder.charAt(0)); // El primer elemento del recorrido en preorden es la raíz
         int inorderRootIndex = inorder.indexOf(root); // Encuentra el índice de la raíz en el recorrido en inorden
 
         // Con las dos líneas anteriores hemos dividido el árbol en raíz, subárbol izquierdo y subárbol derecho,

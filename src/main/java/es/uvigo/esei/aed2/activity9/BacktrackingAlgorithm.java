@@ -51,13 +51,13 @@ public class BacktrackingAlgorithm {
 
             //Si no quedan billetes de un tamaño, probamos con otro
             if (changeAvailable.get(billete) > 0 && amountReturned >= billete) {
+                // Restamos un billete de la cantidad a probar a la lista de billetes disponibles (la caja)
+                changeAvailable.add(billete, changeAvailable.get(billete) - 1);
+
                 //Si la resta es exacta
                 if (amountReturned - billete == 0) {
                     objetivo = true;
                 } else {
-                    // Restamos un billete de la cantidad a probar a la lista de billetes disponibles (la caja)
-                    changeAvailable.add(billete, changeAvailable.get(billete) - 1);
-
                     // Usamos el mismo algoritmo para comprobar las opciones más pequeñas
                     objetivo = giveChange(amountReturned - billete, changeAvailable, solution);
 
@@ -319,7 +319,7 @@ public class BacktrackingAlgorithm {
                     //Probamos con todas las cartas
                     for (int k = 0; k < cards.size() && !objetivo; k++) {
                         PuzzleCard card = cards.get(k);
-                        boolean fits = false;
+                        boolean fits;
 
                         // Resetear estado de la ficha antes de probar
                         card.setAvailableSides(card.getNumPuzzleCard());
@@ -331,8 +331,8 @@ public class BacktrackingAlgorithm {
                             // pero como ya lo comprobamos antes, nos libramos de más lógica
                         } else if ((row == 0 || row == PUZZLE_DIMENSION - 1) || (column == 0 || column == PUZZLE_DIMENSION - 1)) {
                             fits = canInsertEdge(board, row, column, card);
-                            // "Centre" se refiere a cualquier otra posición que no sea esquina o borde
                         } else {
+                            // "Centre" se refiere a cualquier otra posición que no sea esquina o borde
                             fits = isPossibleInsertCentre(board, row, column, card);
                         }
 

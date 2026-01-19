@@ -56,14 +56,17 @@ public class GreedyAlgorithm {
 
     // Exercise 1 - Problema del viajante (aproximación voraz)
     public static <T> Graph<T, Integer> traveller(Graph<T, Integer> graph, Vertex<T> vertex) {
+        //Creamos un nuevo grafo para almacenar el resultado y una lista de vértices visitados
         Graph<T, Integer> result = new MapOfMap<>();
         Set<Vertex<T>> visited = new HashSet<>();
+
+        // Empezamos desde el vértice dado
         Vertex<T> current = vertex;
 
         // Añadir el vértice inicial al conjunto de visitados
         visited.add(current);
 
-        // Mientras haya vértices no visitados
+        // Mientras haya vértices no visitados (que el tamaño del conjunto de visitados sea menor que el total de vértices)
         while (visited.size() < graph.getVertices().size()) {
             Vertex<T> nearest = null;
             Integer minDistance = Integer.MAX_VALUE;
@@ -82,13 +85,18 @@ public class GreedyAlgorithm {
 
             // Si se encontró un vértice cercano, añadir la arista al resultado y marcarlo como visitado
             if (nearest != null) {
+                // Añadir vértices al grafo resultado
                 result.addVertex(current);
                 result.addVertex(nearest);
 
+                // Añadir la arista entre el vértice actual y el más cercano
                 result.addEdge(current, nearest, minDistance);
+
+                // Marcar el vértice más cercano como visitado y actualizar el vértice actual
                 visited.add(nearest);
                 current = nearest;
             } else {
+                // Si no hay vértices no visitados accesibles, salir del bucle
                 break;
             }
         }
@@ -151,13 +159,17 @@ public class GreedyAlgorithm {
             Vertex<T> current = null;
             Integer minDistance = Integer.MAX_VALUE;
 
+            // En la primera pasada selecciona el vértice de inicio
             for (Vertex<T> v : graph.getVertices()) {
+                // Si no ha sido visitado y su distancia es menor que la mínima encontrada
                 if (!visited.contains(v) && distances.get(v) < minDistance) {
+                    // Actualizar dist. mínima y vértice actual
                     minDistance = distances.get(v);
                     current = v;
                 }
             }
 
+            // Si no se encuentra ningún vértice (puede ocurrir si el grafo no es conexo)
             if (current == null) break;
 
             visited.add(current);
@@ -179,12 +191,20 @@ public class GreedyAlgorithm {
     // Exercise 4
     public static <T> Map<Vertex<T>, String> colorMap(Graph<T, Integer> graph, String[] colors) {
         Map<Vertex<T>, String> vertexColoursMap = new HashMap<>();
+        Set<Vertex<T>> visited = new HashSet<>();
 
-        // Si el test espera un orden específico, itera directamente
-        for (Vertex<T> vertex : graph.getVertices()) {
-            String color = defineColor(vertex, colors, graph, vertexColoursMap);
-            if (color != null) {
-                vertexColoursMap.add(vertex, color);
+        while(visited.size() < graph.numberOfVertices()) {
+            // Si el test espera un orden específico, itera directamente
+            for (Vertex<T> vertex : graph.getVertices()) {
+                if(!visited.contains(vertex)) {
+                    String color = defineColor(vertex, colors, graph, vertexColoursMap);
+                    if (color != null) {
+                        vertexColoursMap.add(vertex, color);
+                        visited.add(vertex);
+                    } else {
+                        break;
+                    }
+                }
             }
         }
 
@@ -205,7 +225,6 @@ public class GreedyAlgorithm {
 
                 if (adjColour != null && adjColour.equals(currentColor)) {
                     available = false;
-                    break;
                 }
             }
 
